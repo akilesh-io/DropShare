@@ -27,4 +27,17 @@ rails -v 8.1.3
 
 * Deployment instructions
 
-* ...
+* Primary colour
+#000F89 - https://en.wikipedia.org/wiki/Copper_phthalocyanine
+#0E1012 - https://akilesh.in
+
+
+## CSS
+
+base/ → global rules
+layout/ → structure (grid, flex, sidebar)
+components/ → reusable UI pieces
+pages/ → page-specific tweaks
+
+
+Naming convention class-based styling 
