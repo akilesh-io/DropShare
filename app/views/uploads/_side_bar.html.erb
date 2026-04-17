@@ -1,0 +1,16 @@
+<h3 class="sidebar-title">Files History</h3>
+
+<% @uploads.each do |u| %>
+  <div class="card file-card">
+    <div class="file-info">
+      <p class="file-name"><%= u.file.filename %></p>
+      <p class="file-meta">Downloads: <%= u.downloads %></p>
+    </div>
+
+    <input class="file-link" value="<%= file_url(u.token) %>" readonly />
+
+    <button class="btn btn-primary copy-btn" data-link="<%= file_url(u.token) %>">
+      Copy
+    </button>
+  </div>
+<% end %>

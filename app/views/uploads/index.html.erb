@@ -1,64 +1,16 @@
-<h2>Upload File</h2>
+<div class="app">
+  <aside class="sidebar">
+    <%= render "/uploads/side_bar" %>
+  </aside>
 
-<div id="dropzone" style="border:2px dashed #aaa;padding:40px;">
-  Drop or Click
-</div>
-<input type="file" id="fileInput" hidden />
+  <main class="main">
+    <%= render "/uploads/drop_area" %>
+  </main>
 
-<div id="linkBox"></div>
-
-<h3>Your Files</h3>
-
-<% @uploads.each do |u| %>
-  <div style="border:1px solid #ddd;margin:10px;padding:10px;">
-    <p><b><%= u.file.filename %></b></p>
-    <p>Downloads: <%= u.downloads %></p>
-
-    <input value="<%= file_url(u.token) %>" readonly style="width:100%" />
-
-    <button onclick="copyLink('<%= file_url(u.token) %>')">
-      Copy Link
-    </button>
+  <!-- GLOBAL DROP OVERLAY -->
+  <div id="globalDrop" class="global-drop">
+    <div class="global-drop-inner">
+      <p>Drop files to upload</p>
+    </div>
   </div>
-<% end %>
-
-<script>
-const dz = document.getElementById("dropzone");
-const input = document.getElementById("fileInput");
-
-dz.onclick = () => input.click();
-
-input.onchange = () => upload(input.files[0]);
-
-dz.ondragover = e => e.preventDefault();
-dz.ondrop = e => {
-  e.preventDefault();
-  upload(e.dataTransfer.files[0]);
-};
-
-function upload(file) {
-  const token = document.querySelector('meta[name="csrf-token"]').content;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  fetch("/uploads", {
-    method: "POST",
-    headers: {
-      "X-CSRF-Token": token
-    },
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("linkBox").innerHTML =
-      `<input value="${data.link}" style="width:100%" />`;
-    location.reload();
-  });
-}
-
-function copyLink(link) {
-  navigator.clipboard.writeText(link);
-  alert("Copied!");
-}
-</script>
+</div>
