@@ -28,6 +28,14 @@
   box-sizing: border-box;
 }
 
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 900.0;
+*
+* available axes:
+'wght' (range from 300.0 to 900.0
+*/
 @font-face {
   font-family: 'Satoshi-Variable';
   src: url('Satoshi-Variable.woff2') format('woff2'),
@@ -37,19 +45,21 @@
   font-display: swap;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'Satoshi-VariableItalic';
-  src: url('../fonts/Satoshi-VariableItalic.woff2') format('woff2'),
-       url('../fonts/Satoshi-VariableItalic.woff') format('woff'),
-       url('../fonts/Satoshi-VariableItalic.ttf') format('truetype');
+  src: url('Satoshi-VariableItalic.woff2') format('woff2'),
+       url('Satoshi-VariableItalic.woff') format('woff'),
+       url('Satoshi-VariableItalic.ttf') format('truetype');
   font-weight: 300 900;
   font-display: swap;
   font-style: italic;
 }
 
 
+
 :root {
+  --font-sans: 'Inter', 'Satoshi-Variable';
+  --font-sans-italic: 'Inter', 'Satoshi-VariableItalic';
   --color-background: #0e1012;
 
   --text-primary: #E5E7EB;
@@ -119,7 +129,6 @@
   --blue-indicator: #000f89;
   --blue-track: #000f89;
 
-  --font-sans: 'Inter', 'Satoshi-Variable';
 }
 
 body {
