@@ -52,6 +52,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Live reload https://github.com/railsjazz/rails_live_reload
+  gem "rails_live_reload"
 end
 
 group :development do
