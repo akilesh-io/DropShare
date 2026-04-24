@@ -1,11 +1,13 @@
 <div class="app">
-  <aside class="sidebar">
-    <%= render "/uploads/side_bar" %>
-  </aside>
-
   <main class="main">
-    <%= render "/uploads/drop_area" %>
+    <%= render "/uploads/drop" %>
   </main>
+
+  <%  if(@uploads.present?) %>
+    <aside class="sidebar">
+      <%= render "/uploads/share" %>
+    </aside>
+  <% end %>
 
   <!-- GLOBAL DROP OVERLAY -->
   <div id="globalDrop" class="global-drop">
