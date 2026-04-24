@@ -1,0 +1,21 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.sidebar {
+  width: 350px;
+  border-left: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+}

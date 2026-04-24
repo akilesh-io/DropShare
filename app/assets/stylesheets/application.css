@@ -11,8 +11,7 @@
 
 /* Base */
 /* @import "base/variables.css"; */
-/* @import "base/reset.css"; */
-/**/
+
 /* Layout */
 /* @import "layout/app.css"; */
 /* @import "layout/sidebar.css"; */
@@ -20,201 +19,16 @@
 /* Components */
 /* @import "components/all.css"; */
 
-
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/**
-* This is a variable font
-* You can control variable axes as shown below:
-* font-variation-settings: wght 900.0;
-*
-* available axes:
-'wght' (range from 300.0 to 900.0
-*/
-@font-face {
-  font-family: 'Satoshi-Variable';
-  src: url('Satoshi-Variable.woff2') format('woff2'),
-       url('Satoshi-Variable.woff') format('woff'),
-       url('Satoshi-Variable.ttf') format('truetype');
-  font-weight: 300 900;
-  font-display: swap;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Satoshi-VariableItalic';
-  src: url('Satoshi-VariableItalic.woff2') format('woff2'),
-       url('Satoshi-VariableItalic.woff') format('woff'),
-       url('Satoshi-VariableItalic.ttf') format('truetype');
-  font-weight: 300 900;
-  font-display: swap;
-  font-style: italic;
-}
-
-
-
-:root {
-  --font-sans: 'Inter', 'Satoshi-Variable';
-  --font-sans-italic: 'Inter', 'Satoshi-VariableItalic';
-  --color-background: #0e1012;
-
-  --text-primary: #E5E7EB;
-  --text-secondary: #9CA3AF;
-  --text-heading: #F9FAFB;
-  --text-muted: #6B7280;
-
-  --gray-1: #101011;
-  --gray-2: #19191a;
-  --gray-3: #222224;
-  --gray-4: #2a2a2b;
-  --gray-5: #313132;
-  --gray-6: #3a3a3b;
-  --gray-7: #484849;
-  --gray-8: #616162;
-  --gray-9: #6f6f70;
-  --gray-10: #7c7c7d;
-  --gray-11: #b4b4b5;
-  --gray-12: #eeeeef;
-
-  --gray-a1: #b8100003;
-  --gray-a2: #f8d0bc0c;
-  --gray-a3: #f6e1e316;
-  --gray-a4: #fcede71e;
-  --gray-a5: #f9eee926;
-  --gray-a6: #fdf4f12f;
-  --gray-a7: #fcf7f43e;
-  --gray-a8: #fffbfa58;
-  --gray-a9: #fffbfb67;
-  --gray-a10: #fdfbfb75;
-  --gray-a11: #fffefeb0;
-  --gray-a12: #fefeffee;
-
-  --gray-contrast: #FFFFFF;
-  --gray-surface: rgba(0, 0, 0, 0.05);
-  --gray-indicator: #6f6f70;
-  --gray-track: #6f6f70;
-
-  --blue-1: #000;
-  --blue-2: #050f28;
-  --blue-3: #03195f;
-  --blue-4: #00168d;
-  --blue-5: #0222a2;
-  --blue-6: #0731b3;
-  --blue-7: #0f3ecd;
-  --blue-8: #124af4;
-  --blue-9: #000f89;
-  --blue-10: #042aa9;
-  --blue-11: #8ab4ff;
-  --blue-12: #cee3ff;
-
-  --blue-a1: #00000000;
-  --blue-a2: #2060ff28;
-  --blue-a3: #0944ff5f;
-  --blue-a4: #0028ff8d;
-  --blue-a5: #0336ffa2;
-  --blue-a6: #0a46ffb3;
-  --blue-a7: #134dffcd;
-  --blue-a8: #134dfff4;
-  --blue-a9: #001cff89;
-  --blue-a10: #0640ffa9;
-  --blue-a11: #8ab4ff;
-  --blue-a12: #cee3ff;
-
-  --blue-contrast: #fff;
-  --blue-surface: #0a1e5080;
-  --blue-indicator: #000f89;
-  --blue-track: #000f89;
-
-}
-
 body {
   background-color: var(--color-background);
   color: var(--blue-contrast);
   font-family: var(--font-sans);
-  /* font-family: 'Inter', 'Satoshi-Variable'; */
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.app {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.sidebar {
-  width: 350px;
-  border-left: 1px solid var(--border);
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* button */
-.btn {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: white;
-}
-
-
-/* card */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-/* dropzone */
-.dropzone {
-  border: 2px dashed var(--border);
-  padding: 60px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.dropzone:hover {
-  border-color: var(--primary);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* layout polish */
 .sidebar {
-  width: 320px;
+  width: 100%;
   background: var(--gray-2);
   border-left: 1px solid var(--border);
 }
