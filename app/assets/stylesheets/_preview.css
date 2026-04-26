@@ -1,0 +1,15 @@
+.no-preview {
+  max-width: 150px;
+}
+
+
+
+.video-small {
+  max-width: 320px;
+}
+
+.video-compact {
+  max-width: 250px;
+  transform: scale(0.9);
+  transform-origin: top left;
+}

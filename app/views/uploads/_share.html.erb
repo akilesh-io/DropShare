@@ -2,6 +2,34 @@
 
 <% @uploads.each do |u| %>
   <div class="card file-card">
+
+    <div class="file-preview">
+      <% if u.file.video? %>
+        <video-player>
+          <video-minimal-skin class="video-compact">
+            <video src="<%= url_for(u.file) %>" playsinline preload="metadata"></video>
+          </video-minimal-skin>
+        </video-player>
+      <% elsif u.file.representable? %>
+        <%= image_tag u.file.representation(resize_to_limit: [200, 200]) %>
+      <% elsif u.file.audio? %>
+        <audio-player>
+          <audio-skin>
+            <audio src="<%= url_for(u.file) %>"></audio>
+          </audio-skin>
+        </audio-player>
+      <% elsif u.file.content_type == "application/pdf" %>
+        <iframe src="<%= url_for(u.file) %>" width="250" height="300"></iframe>
+      <% else %>
+        <div class="no-preview">
+          <%= link_to rails_blob_path(u.file, disposition: "attachment") do %>
+            <%= image_tag "no-preview.png", alt: "Download file" %>
+          <% end %>
+          <p>No preview available</p>
+        </div>
+      <% end %>
+    </div>
+
     <div class="file-info">
       <p class="file-name"><%= u.file.filename %></p>
       <p class="file-meta">Downloads: <%= u.downloads %></p>
@@ -9,8 +37,15 @@
 
     <input class="file-link" value="<%= file_url(u.token) %>" readonly />
 
-    <button class="btn btn-primary copy-btn" data-link="<%= file_url(u.token) %>">
+    <button class="btn btn-primary copy-btn"
+            data-link="<%= file_url(u.token) %>">
       Copy
     </button>
+
   </div>
 <% end %>
+
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/video-minimal.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/audio.js"></script>
+
