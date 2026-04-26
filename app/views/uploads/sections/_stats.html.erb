@@ -1,0 +1,18 @@
+<div>
+  <div class="stats-card">
+    <div class="stat">
+        <div class="value"><%= @stats.lifetime_uploads %></div>
+        <div class="label">Files Shared</div>
+    </div>
+
+    <div class="stat">
+        <div class="value"><%= (@stats.lifetime_size / 1.megabyte).round(2) %></div>
+        <div class="label">MB Uploaded</div>
+    </div>
+
+    <div class="stat">
+        <div class="value"><%= @stats.total_downloads %></div>
+        <div class="label">Downloads</div>
+    </div>
+  </div>
+</div>

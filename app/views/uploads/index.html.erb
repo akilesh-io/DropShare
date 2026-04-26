@@ -7,7 +7,10 @@
     <aside class="sidebar">
       <%= render "/uploads/share" %>
     </aside>
+  <% else %>
+    <%= render "/uploads/sections/stats" %>
   <% end %>
+
 
   <!-- GLOBAL DROP OVERLAY -->
   <div id="globalDrop" class="global-drop">
