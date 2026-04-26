@@ -10,27 +10,26 @@ class UploadsController < ApplicationController
   end
 
   def create
-    return render json: { error: "No file" }, status: 400 unless params[:file]
-
-    file = params[:file]
-    file_size = file.size
+    return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
 
     upload = Upload.new(
       expires_at: Rails.configuration.FILE_EXPIRY_DAYS.days.from_now,
       session_id: session[:user_id]
     )
-    upload.file.attach(file)
+
+    upload.file.attach(params[:blob_signed_id])
 
     if upload.save
-      stats = Stat.instance
+      file_size = upload.file.blob.byte_size
 
+      stats = Stat.instance
       stats.increment!(:current_uploads)
       stats.increment!(:lifetime_uploads)
-
       stats.update!(
         current_size: stats.current_size + file_size,
         lifetime_size: stats.lifetime_size + file_size
       )
+
       render json: {
         link: file_url(upload.token),
         id: upload.id

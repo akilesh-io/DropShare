@@ -1,4 +1,10 @@
+import * as ActiveStorage from "@rails/activestorage"
+import { DirectUpload } from "@rails/activestorage"
+
+ActiveStorage.start()
+
 document.addEventListener("turbo:load", () => {
+
   const dz = document.getElementById("dropzone")
   const input = document.getElementById("fileInput")
   const linkBox = document.getElementById("linkBox")
@@ -75,30 +81,44 @@ document.addEventListener("turbo:load", () => {
   // UPLOAD FUNCTION
   // --------------------------
   function upload(file) {
-    const token = document.querySelector('meta[name="csrf-token"]').content
-
-    const formData = new FormData()
-    formData.append("file", file)
-
-    // UI feedback (optional)
+    const url = input.dataset.directUploadUrl
+    const upload = new DirectUpload(file, url)
+    // const upload = new DirectUpload(file, url, {
+    //   directUploadWillStoreFileWithXHR: (xhr) => {
+    //     xhr.upload.addEventListener("progress", (event) => {
+    //       const progress = (event.loaded / event.total) * 100
+    //       console.log("Upload:", progress.toFixed(2) + "%")
+    //     })
+    //   }
+    // })
     globalDrop?.classList.add("active")
     globalDrop?.classList.add("uploading")
 
-    fetch("/uploads", {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        linkBox.innerHTML =
-          `<input value="${data.link}" style="width:100%" />`
-        location.reload()
-      })
-      .finally(() => {
+    upload.create((error, blob) => {
+      if (error) {
+        console.error(error)
         globalDrop?.classList.remove("uploading")
-      })
+      } else {
+        fetch("/uploads", {
+          method: "POST",
+          headers: {
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            blob_signed_id: blob.signed_id
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          linkBox.innerHTML =
+            `<input value="${data.link}" style="width:100%" />`
+          location.reload()
+        })
+        .finally(() => {
+          globalDrop?.classList.remove("uploading")
+        })
+      }
+    })
   }
 })
