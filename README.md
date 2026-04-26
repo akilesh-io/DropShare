@@ -23,6 +23,8 @@ rails -v 8.1.3
 
 ## CSS
 
+Design system insp: https://hds.hel.fi/
+
 base/ → global rules
 layout/ → structure (grid, flex, sidebar)
 components/ → reusable UI pieces
@@ -35,3 +37,9 @@ Naming convention class-based styling
 ### TODO
 * remove unattached files - https://guides.rubyonrails.org/active_storage_overview.html#purging-unattached-uploads
 * Serve Large files directly - https://writesoftwarewell.com/serving-large-files-rails-nginx-thruster
+* Optimise rails Sqlite - https://fractaledmind.com/2024/04/15/sqlite-on-rails-the-how-and-why-of-optimal-performance/
+* use import map - https://videojs.org/
+
+
+## Helper commands
+Rails.logger.info ("DEBUG :::: #{file_size}")
