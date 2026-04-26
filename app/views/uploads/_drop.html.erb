@@ -3,6 +3,8 @@
   <p class="drop-sub">or click to upload</p>
 </div>
 
-<input type="file" id="fileInput" hidden data-direct-upload-url="<%= rails_direct_uploads_url %>" />
+<%= form_with do |form| %>
+  <%= form.file_field :files, multiple: true, direct_upload: true, id: "fileInput", hidden: true %>
+<% end %>
 
 <div id="linkBox" class="link-box"></div>
