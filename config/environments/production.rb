@@ -23,6 +23,7 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+  config.active_storage.resolve_model_to_route = :rails_storage_redirect
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -87,4 +88,8 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Tell Rails to use Nginx's X-Accel-Redirect header for file serving.
+  # Ensure Nginx is configured to handle this header and the internal location.
+  # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 end
