@@ -1,0 +1,17 @@
+<h1>Share</h1>
+<% @uploads.each do |u| %>
+    <div class="file-info">
+      <p class="file-name"><%= u.file.filename %></p>
+    </div>
+
+    <%= render "/components/file_preview", upload: u %>
+    <input class="file-link" value="<%= file_url(u.token) %>" readonly />
+
+    <%#= link_to rails_blob_path(u.file, disposition: "attachment") do %>
+      <%# Download file %>
+    <%# end %>
+    <%= link_to "Download file", download_path(u.token), target: "_blank", data: { turbo: false } %>
+<% end %>
+
+
+

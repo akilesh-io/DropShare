@@ -1,0 +1,30 @@
+<% if upload.file.video? %>
+  <video-player>
+    <video-skin class="video-compact">
+      <video src="<%= url_for(upload.file) %>" playsinline preload="metadata"></video>
+    </video-skin>
+  </video-player>
+
+<% elsif upload.file.representable? %>
+  <%= image_tag upload.file.representation(resize_to_limit: [200, 200]) %>
+
+<% elsif upload.file.audio? %>
+  <audio-player>
+    <audio-skin>
+      <audio src="<%= url_for(upload.file) %>"></audio>
+    </audio-skin>
+  </audio-player>
+
+<% elsif upload.file.blob.content_type == "application/pdf" %>
+  <iframe src="<%= url_for(upload.file) %>" width="250" height="300"></iframe>
+
+<% else %>
+  <div class="no-preview">
+    <%= link_to rails_blob_path(upload.file, disposition: "attachment") do %>
+      <%= image_tag "no-preview.png", alt: "Download file" %>
+    <% end %>
+    <p>No preview available</p>
+  </div>
+<% end %>
+
+

@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   resources :uploads, only: [:index, :create]
 
   get "/upload", to: "uploads#new"
-  get "/f/:token", to: "uploads#show", as: :file
+
+  get "/s/:token", to: "share#index", as: :file
+  get "/d/:token", to: "share#download", as: :download
 
   mount MissionControl::Jobs::Engine, at: "/jobs"
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

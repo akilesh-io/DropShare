@@ -3,7 +3,6 @@ class UploadsController < ApplicationController
 
   def index
     @uploads = Upload.with_attached_file.where(session_id: session[:user_id]).order(created_at: :desc)
-
     @stats = Stat.instance
   end
 
@@ -12,7 +11,7 @@ class UploadsController < ApplicationController
 
   def create
     return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
-    
+ 
     upload = Upload.new(
       expires_at: Rails.configuration.FILE_EXPIRY_DAYS.days.from_now,
       session_id: session[:user_id]
@@ -40,16 +39,6 @@ class UploadsController < ApplicationController
     end
   end
 
-  def show
-    upload = Upload.find_by!(token: params[:token])
-    return render plain: "Expired", status: 410 if upload.expired?
-
-    upload.increment!(:downloads)
-    Stat.instance.increment!(:total_downloads)
-
-    redirect_to rails_blob_url(upload.file, disposition: "attachment")
-  end
-
   private
 
   def set_session
@@ -57,6 +46,6 @@ class UploadsController < ApplicationController
   end
 
   def file_url(token)
-    "#{request.base_url}/f/#{token}"
+    "#{request.base_url}/s/#{token}"
   end
 end
