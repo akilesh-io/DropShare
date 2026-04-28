@@ -7,7 +7,8 @@ image: 2112akilesh/drop_share
 # Deploy to these servers.
 servers:
   web:
-    - 80.225.242.53
+    - 161.118.170.197
+  #  - 80.225.242.53
   # job:
   #   hosts:
   #     - 192.168.0.1
