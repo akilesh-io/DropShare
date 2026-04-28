@@ -10,7 +10,7 @@
     <%#= link_to rails_blob_path(u.file, disposition: "attachment") do %>
       <%# Download file %>
     <%# end %>
-    <%= link_to "Download file", download_path(u.token), target: "_blank", data: { turbo: false } %>
+    <%= link_to "Download file", download_path(token: u.token), target: "_blank", data: { turbo: false } %>
 <% end %>
 
 

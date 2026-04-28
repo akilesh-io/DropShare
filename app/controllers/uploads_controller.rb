@@ -44,8 +44,4 @@ class UploadsController < ApplicationController
   def set_session
     session[:user_id] ||= SecureRandom.uuid
   end
-
-  def share_url(token)
-    "#{request.base_url}/s/#{token}"
-  end
 end
