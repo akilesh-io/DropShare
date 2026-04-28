@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get "/upload", to: "uploads#new"
 
-  get "/s/:token", to: "share#index", as: :file
+  get "/s/:token", to: "share#index", as: :share
   get "/d/:token", to: "share#download", as: :download
 
   mount MissionControl::Jobs::Engine, at: "/jobs"

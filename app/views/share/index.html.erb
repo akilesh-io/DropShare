@@ -5,7 +5,7 @@
     </div>
 
     <%= render "/components/file_preview", upload: u %>
-    <input class="file-link" value="<%= file_url(u.token) %>" readonly />
+    <input class="file-link" value="<%= share_url(u.token) %>" readonly />
 
     <%#= link_to rails_blob_path(u.file, disposition: "attachment") do %>
       <%# Download file %>

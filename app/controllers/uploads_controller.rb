@@ -31,7 +31,7 @@ class UploadsController < ApplicationController
       )
 
       render json: {
-        link: file_url(upload.token),
+        link: share_url(upload.token),
         id: upload.id
       }
     else
@@ -45,7 +45,7 @@ class UploadsController < ApplicationController
     session[:user_id] ||= SecureRandom.uuid
   end
 
-  def file_url(token)
+  def share_url(token)
     "#{request.base_url}/s/#{token}"
   end
 end

@@ -11,10 +11,10 @@
       <p class="file-meta">Downloads: <%= u.downloads %></p>
     </div>
 
-    <input class="file-link" value="<%= file_url(u.token) %>" readonly />
+    <input class="file-link" value="<%= share_url(u.token) %>" readonly />
 
     <button class="btn btn-primary copy-btn"
-            data-link="<%= file_url(u.token) %>">
+            data-link="<%= share_url(u.token) %>">
       Copy
     </button>
 
