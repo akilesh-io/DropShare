@@ -7,7 +7,7 @@ image: 2112akilesh/drop_share
 # Deploy to these servers.
 servers:
   web:
-    - 155.248.241.31
+    - 141.148.209.128
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -43,7 +43,7 @@ env:
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
-    SOLID_QUEUE_IN_PUMA: true
+    SOLID_QUEUE_IN_PUMA: false
 
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3
