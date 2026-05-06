@@ -1,4 +1,4 @@
-class UploadsController < ApplicationController
+class DropController < ApplicationController
   before_action :set_session
 
   def index

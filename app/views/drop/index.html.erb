@@ -1,14 +1,14 @@
 <div class="app">
   <main class="main">
-    <%= render "/uploads/drop" %>
+    <%= render "/drop/drop" %>
   </main>
 
   <% if(@uploads.present?) %>
     <aside class="sidebar">
-      <%= render "/uploads/share" %>
+      <%= render "/drop/share" %>
     </aside>
   <% else %>
-    <%= render "/uploads/sections/stats" %>
+    <%= render "/drop/sections/stats" %>
   <% end %>
 
 

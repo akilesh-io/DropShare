@@ -97,7 +97,7 @@ function upload(file) {
       console.error(error)
       globalDrop?.classList.remove("uploading")
     } else {
-      fetch("/uploads", {
+      fetch("/drop", {
         method: "POST",
         headers: {
           "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
