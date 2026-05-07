@@ -26,7 +26,7 @@ rails -v 8.1.3
 Design system insp: https://hds.hel.fi/
 
 base/ → global rules
-layout/ → structure (grid, flex, sidebar)
+layout/ → structure (grid, flex, drawer)
 components/ → reusable UI pieces
 pages/ → page-specific tweaks
 

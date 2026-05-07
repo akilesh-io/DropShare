@@ -4,8 +4,8 @@
   </main>
 
   <% if(@uploads.present?) %>
-    <aside class="sidebar">
-      <%= render "/drop/share" %>
+    <aside class="drawer">
+      <%= render "/drop/drawer" %>
     </aside>
   <% else %>
     <%= render "/components/stats" %>
