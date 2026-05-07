@@ -3,8 +3,8 @@ import { DirectUpload } from "@rails/activestorage"
 
 ActiveStorage.start()
 
-const dz = document.getElementById("dropzone")
-const input = document.getElementById("upload_attachment")
+const dz = document.querySelector("[data-dropzone]")
+const input = document.getElementById("koppu_attachment")
 const linkBox = document.getElementById("linkBox")
 const globalDrop = document.getElementById("globalDrop")
 
