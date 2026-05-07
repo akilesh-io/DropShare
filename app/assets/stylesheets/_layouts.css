@@ -1,6 +1,6 @@
 .app {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   height: 100vh;
   overflow: hidden;
 }
@@ -13,9 +13,17 @@
   padding: 40px;
 }
 
-.sidebar {
-  width: 350px;
-  border-left: 1px solid var(--border);
+.drawer {
+  /* width: 350px; */
   padding: 20px;
   overflow-y: auto;
+  width: 100%;
+  background: var(--gray-2);
+  border-left: 1px solid var(--border);
+}
+
+.drawer-title {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-heading);
 }
