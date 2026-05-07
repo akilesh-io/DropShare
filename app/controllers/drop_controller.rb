@@ -2,7 +2,7 @@ class DropController < ApplicationController
   before_action :set_session
 
   def index
-    @uploads = Upload.with_attached_file.where(session_id: session[:user_id]).order(created_at: :desc)
+    @uploads = Koppu.with_attached_file.where(session_id: session[:user_id]).order(created_at: :desc)
     @stats = Stat.instance
   end
 
@@ -12,7 +12,7 @@ class DropController < ApplicationController
   def create
     return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
  
-    upload = Upload.new(
+    upload = Koppu.new(
       expires_at: Rails.configuration.FILE_EXPIRY_DAYS.days.from_now,
       session_id: session[:user_id]
     )

@@ -33,6 +33,10 @@ pages/ → page-specific tweaks
 
 Naming convention class-based styling 
 
+## DB Structure
+koppurai - கோப்புறை
+koppu - கோப்பு
+stats
 
 ### TODO
 * remove unattached files - https://guides.rubyonrails.org/active_storage_overview.html#purging-unattached-uploads
@@ -43,3 +47,4 @@ Naming convention class-based styling
 
 ## Helper commands
 Rails.logger.info ("DEBUG :::: #{file_size}")
+

@@ -1,10 +1,10 @@
 class ShareController < ApplicationController
   def index
-    @uploads = Upload.with_attached_file.where(token: params[:token]).order(created_at: :desc)
+    @uploads = Koppu.with_attached_file.where(token: params[:token]).order(created_at: :desc)
   end
 
   def download
-    upload = Upload.find_by!(token: params[:token])
+    upload = Koppu.find_by!(token: params[:token])
     return render plain: "Expired", status: 410 if upload.expired?
 
     upload.increment!(:downloads)

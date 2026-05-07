@@ -2,7 +2,7 @@ class CleanupUploadJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
-    upload = Upload.find_by(id: id)
+    upload = Koppu.find_by(id: id)
     return unless upload
 
     size = upload.file.blob.byte_size

@@ -1,4 +1,5 @@
-class Upload < ApplicationRecord
+class Koppu < ApplicationRecord
+  self.table_name = "koppukal"
   has_one_attached :file
 
   before_create :generate_token
@@ -21,3 +22,5 @@ class Upload < ApplicationRecord
     CleanupUploadJob.set(wait_until: expires_at).perform_later(id)
   end
 end
+
+
