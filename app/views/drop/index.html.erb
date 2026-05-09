@@ -1,13 +1,15 @@
-<div class="app">
-  <main class="main">
+<main class="main">
+  <div class="drop-area">
     <%= render "/drop/drop" %>
-  </main>
+  </div>
+</main>
 
-  <% if(@uploads.present?) %>
-    <aside class="drawer">
-      <%= render "/drop/drawer" %>
-    </aside>
-  <% else %>
+<% if(@uploads.present?) %>
+  <aside class="drawer">
+    <%= render "/drop/drawer" %>
+  </aside>
+<% else %>
+  <div class="stats">
     <%= render "/components/stats" %>
-  <% end %>
-</div>
+  </div>
+<% end %>

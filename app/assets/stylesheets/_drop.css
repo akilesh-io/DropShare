@@ -1,3 +1,29 @@
+.main {
+  height: 45vh;
+	clip-path: polygon(0% 0px, 100% 0%, 100% 100%, 0px 100%);
+}
+
+.drop-area {
+  position: fixed;
+  inset: -5rem;
+  display: grid;
+  place-items: center;
+}
+
+.drawer {
+  padding: 20px;
+  overflow-y: auto;
+  width: 100%;
+  background: var(--gray-2);
+  border-left: 1px solid var(--border);
+}
+
+.drawer-title {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-heading);
+}
+
 .drop-title {
   font-size: 18px;
   font-weight: 600;

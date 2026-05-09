@@ -1,3 +1,10 @@
+.stats {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .stats-card {
   display: flex;
   align-items: center;
