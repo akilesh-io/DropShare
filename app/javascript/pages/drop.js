@@ -5,8 +5,6 @@ ActiveStorage.start()
 
 const dz = document.querySelector("[data-dropzone]")
 const input = document.getElementById("koppu_attachment")
-const linkBox = document.getElementById("linkBox")
-const globalDrop = document.getElementById("globalDrop")
 
 // if (!dz || !input) return
 
@@ -33,10 +31,6 @@ dz.addEventListener("drop", (e) => {
   if (file) upload(file)
 })
 
-// --------------------------
-// GLOBAL DRAG (FULL SCREEN)
-// --------------------------
-
 // prevent browser opening file
 ;["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
   document.addEventListener(event, (e) => e.preventDefault())
@@ -44,19 +38,16 @@ dz.addEventListener("drop", (e) => {
 
 document.addEventListener("dragenter", () => {
   dragCounter++
-  globalDrop?.classList.add("active")
 })
 
 document.addEventListener("dragleave", () => {
   dragCounter--
   if (dragCounter === 0) {
-    globalDrop?.classList.remove("active")
   }
 })
 
 document.addEventListener("drop", (e) => {
   dragCounter = 0
-  globalDrop?.classList.remove("active")
 
   const file = e.dataTransfer.files[0]
   if (file) upload(file)
@@ -89,13 +80,10 @@ function upload(file) {
   //     })
   //   }
   // })
-  globalDrop?.classList.add("active")
-  globalDrop?.classList.add("uploading")
 
   upload.create((error, blob) => {
     if (error) {
       console.error(error)
-      globalDrop?.classList.remove("uploading")
     } else {
       fetch("/drop", {
         method: "POST",
@@ -109,12 +97,9 @@ function upload(file) {
       })
       .then(res => res.json())
       .then(data => {
-        linkBox.innerHTML =
-          `<input value="${data.link}" style="width:100%" />`
         location.reload()
       })
       .finally(() => {
-        globalDrop?.classList.remove("uploading")
       })
     }
   })
