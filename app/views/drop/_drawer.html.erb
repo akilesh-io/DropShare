@@ -5,20 +5,11 @@
     <div class="file-preview">
       <%= render "/components/file_preview", upload: u %>
     </div>
-
-    <div class="file-info">
-      <p class="file-name"><%= u.file.filename %></p>
-      <p class="file-meta">Downloads: <%= u.downloads %></p>
-    </div>
-
+    <p class="file-meta">Downloads: <%= u.downloads %></p>
     <input class="file-link" value="<%= share_url(u.token) %>" readonly />
-
-    <button class="btn btn-primary copy-btn"
-            data-link="<%= share_url(u.token) %>">
+    <button class="btn btn-primary copy-btn" data-link="<%= share_url(u.token) %>">
       Copy
     </button>
-
   </div>
 <% end %>
-
 
