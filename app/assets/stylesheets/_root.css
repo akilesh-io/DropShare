@@ -29,13 +29,14 @@
 :root {
   --font-sans: 'Inter', 'Satoshi-Variable';
   --font-sans-italic: 'Inter', 'Satoshi-VariableItalic';
-  --color-background: #0e1012;
 
   --text-primary: #E5E7EB;
   --text-secondary: #9CA3AF;
   --text-heading: #F9FAFB;
   --text-muted: #6B7280;
+
   --primary: #000f89;
+  --dark: #0e1012;
 
   --gray-1: #101011;
   --gray-2: #19191a;
@@ -62,7 +63,7 @@
   --blue-6: #0731b3;
   --blue-7: #0f3ecd;
   --blue-8: #124af4;
-  --blue-9: #000f89;
+  /* --blue-9: #000f89; */
   --blue-10: #042aa9;
   --blue-11: #8ab4ff;
   --blue-12: #cee3ff;
