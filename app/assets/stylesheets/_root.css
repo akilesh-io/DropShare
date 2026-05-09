@@ -35,6 +35,7 @@
   --text-secondary: #9CA3AF;
   --text-heading: #F9FAFB;
   --text-muted: #6B7280;
+  --primary: #000f89;
 
   --gray-1: #101011;
   --gray-2: #19191a;
@@ -49,20 +50,6 @@
   --gray-11: #b4b4b5;
   --gray-12: #eeeeef;
 
-  --gray-a1: #b8100003;
-  --gray-a2: #f8d0bc0c;
-  --gray-a3: #f6e1e316;
-  --gray-a4: #fcede71e;
-  --gray-a5: #f9eee926;
-  --gray-a6: #fdf4f12f;
-  --gray-a7: #fcf7f43e;
-  --gray-a8: #fffbfa58;
-  --gray-a9: #fffbfb67;
-  --gray-a10: #fdfbfb75;
-  --gray-a11: #fffefeb0;
-  --gray-a12: #fefeffee;
-
-  --gray-contrast: #FFFFFF;
   --gray-surface: rgba(0, 0, 0, 0.05);
   --gray-indicator: #6f6f70;
   --gray-track: #6f6f70;
@@ -90,11 +77,9 @@
   --blue-a8: #134dfff4;
   --blue-a9: #001cff89;
   --blue-a10: #0640ffa9;
-  --blue-a11: #8ab4ff;
-  --blue-a12: #cee3ff;
 
   --blue-contrast: #fff;
   --blue-surface: #0a1e5080;
-  --blue-indicator: #000f89;
-  --blue-track: #000f89;
+  /* --blue-indicator: #000f89; */
+  /* --blue-track: #000f89; */
 }
