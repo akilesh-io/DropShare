@@ -1,9 +1,6 @@
 <h1>Share</h1>
 <% @uploads.each do |u| %>
-    <div class="file-info">
-      <p class="file-name"><%= u.file.filename %></p>
-    </div>
-
+  <div title="<%= u.file.filename %>">
     <%= render "/components/file_preview", upload: u %>
     <input class="file-link" value="<%= share_url(u.token) %>" readonly />
 
@@ -11,6 +8,7 @@
       <%# Download file %>
     <%# end %>
     <%= link_to "Download file", download_path(token: u.token), target: "_blank", data: { turbo: false } %>
+  </div>
 <% end %>
 
 

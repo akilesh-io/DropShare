@@ -1,7 +1,7 @@
 <h3 class="drawer-title">Share Files</h3>
 
 <% @uploads.each do |u| %>
-  <div class="card file-card">
+  <div class="file-card" title="<%= u.file.filename %>">
     <div class="file-preview">
       <%= render "/components/file_preview", upload: u %>
     </div>
