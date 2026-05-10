@@ -37,6 +37,7 @@
 
   --primary: #000f89;
   --dark: #0e1012;
+  --light: #fff;
 
   --gray-1: #101011;
   --gray-2: #19191a;
@@ -79,7 +80,6 @@
   --blue-a9: #001cff89;
   --blue-a10: #0640ffa9;
 
-  --blue-contrast: #fff;
   --blue-surface: #0a1e5080;
   /* --blue-indicator: #000f89; */
   /* --blue-track: #000f89; */

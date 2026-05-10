@@ -24,7 +24,7 @@
 }
 
 .dropzone {
-  background: var(--blue-contrast);
+  background: var(--light);
   border: 3px dashed var(--blue-6);
   outline: 10px solid;
   padding: 90px 70px;
