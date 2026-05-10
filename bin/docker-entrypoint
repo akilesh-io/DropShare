@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-# Always prepare database in production before starting the app
-if [ "$RAILS_ENV" = "production" ]; then
+# If running the rails server then create or migrate existing database
+if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
 fi
 
