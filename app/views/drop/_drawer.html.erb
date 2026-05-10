@@ -1,15 +1,18 @@
-<h3 class="drawer-title">Share Files</h3>
+<h3 class="heading-xs">Share Files</h3>
 
-<% @uploads.each do |u| %>
-  <div class="file-card" title="<%= u.file.filename %>">
-    <div class="file-preview">
-      <%= render "/components/file_preview", upload: u %>
+<div class="koppurai"> 
+  <% @uploads.each do |u| %>
+    <div class="koppu" title="<%= u.file.filename %>">
+      <div class="file-preview">
+        <%= render "/components/file_preview", upload: u %>
+      </div>
+      <p class="text-xs">Downloads: <%= u.downloads %></p>
+
+      <!-- <input value="<%= share_url(u.token) %>" readonly /> -->
+      <button class="btn btn-primary copy-btn" data-link="<%= share_url(u.token) %>">
+        Copy
+      </button>
     </div>
-    <p class="file-meta">Downloads: <%= u.downloads %></p>
-    <input class="file-link" value="<%= share_url(u.token) %>" readonly />
-    <button class="btn btn-primary copy-btn" data-link="<%= share_url(u.token) %>">
-      Copy
-    </button>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
