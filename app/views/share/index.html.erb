@@ -4,12 +4,9 @@
     <%= render "/components/file_preview", upload: u %>
     <input class="file-link" value="<%= share_url(u.token) %>" readonly />
 
-    <%#= link_to rails_blob_path(u.file, disposition: "attachment") do %>
-      <%# Download file %>
-    <%# end %>
-    <%= link_to "Download file", download_path(token: u.token), target: "_blank", data: { turbo: false } %>
+    <%= button_to download_path(token: u.token), method: :get, target: "_blank", class: "btn btn-light", data: { turbo: false } do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="3" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10L12 15 17 10"></path><path d="M12 15L12 3"></path></g></svg>
+    <% end %>
   </div>
 <% end %>
-
-
 
