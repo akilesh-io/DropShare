@@ -11,7 +11,7 @@
 
 body {
   background-color: var(--dark);
-  color: var(--blue-contrast);
+  color: var(--light);
   font-family: var(--font-sans);
   transition: background 0.2s ease, color 0.2s ease;
 }
@@ -36,7 +36,12 @@ body {
   color: white;
 }
 
-.btn-primary:hover {
+.btn-light {
+  background: var(--light);
+  color: var(--dark);
+}
+
+.btn-primary:hover, .btn-light:hover {
   filter: brightness(0.95);
 }
 
