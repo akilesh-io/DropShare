@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  get "/:token",          to: "share#index",    as: :share
-  get "/:token/d", to: "share#download", as: :download
+  get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu
+  get "/d/:share_key",        to: "share#download_koppurai", as: :download_koppurai
+  get "/:share_key",          to: "share#index",             as: :share
 end

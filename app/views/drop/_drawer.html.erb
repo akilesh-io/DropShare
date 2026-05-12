@@ -1,20 +1,25 @@
 <h3 class="heading-xs">Share Files</h3>
 
-<div class="koppurai"> 
-  <% @uploads.each do |u| %>
-    <div class="koppu" title="<%= u.file.filename %>">
-      <div class="file-preview">
-        <%= render "/components/file_preview", upload: u %>
-      </div>
-      <p class="text-xs">Downloads: <%= u.downloads %></p>
+<% @koppurai.each do |koppurai| %>
+  <div class="koppurai"> 
+    <input value="<%= share_url(koppurai.share_key) %>" readonly />
+    <button class="btn btn-primary copy-btn" data-link="<%= share_url(koppurai.share_key) %>">
+      Copy
+    </button>
 
-      <!-- <input value="<%= share_url(u.token) %>" readonly /> -->
-      <button class="btn btn-primary copy-btn" data-link="<%= share_url(u.token) %>">
-        Copy
-      </button>
-    </div>
-  <% end %>
-</div>
+    <% koppurai.koppus.each do |koppu| %>
+      <div class="koppu" title="<%= koppu.koppu.filename %>">
+        <div class="file-preview">
+          <%= render "/components/file_preview", koppu: koppu %>
+        </div>
+
+        <p class="text-xs"><%= truncate(koppu.koppu.filename.to_s, length: 28) %></p>
+        <p class="text-xs">Downloads: <%= koppu.downloads_count %></p>
+        <p class="text-xs"><%= number_to_human_size(koppu.byte_size) %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 
 <div class="footer-love">

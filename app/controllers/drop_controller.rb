@@ -2,7 +2,11 @@ class DropController < ApplicationController
   before_action :set_session
 
   def index
-    @uploads = Koppu.with_attached_file.where(session_id: session[:user_id]).order(created_at: :desc)
+    @koppurai = Koppurai
+      .includes(koppus: [koppu_attachment: :blob])
+      .joins(koppus: :koppu_attachment)
+      .where(session_id: session[:user_id])
+      .order(created_at: :desc)
     @stats = Stat.instance
   end
 
@@ -11,16 +15,29 @@ class DropController < ApplicationController
 
   def create
     return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
- 
-    upload = Koppu.new(
+
+    blob = ActiveStorage::Blob.find_signed!(params[:blob_signed_id])
+    koppurai = Koppurai.create!(
       expires_at: Rails.configuration.FILE_EXPIRY_DAYS.days.from_now,
       session_id: session[:user_id]
     )
+    koppukal = koppurai.koppus.new(
+      byte_size: blob.byte_size,
+      content_type: blob.content_type,
+      checksum: blob.checksum
+    )
+    koppukal.koppu.attach(blob)
 
-    upload.file.attach(params[:blob_signed_id])
+    if koppukal.save
+      # koppurai.update!(
+      #   files_count: koppurai.koppus.count,
+      #   total_size: koppurai.koppus.sum(:byte_size)
+      # )
 
-    if upload.save
-      file_size = upload.file.blob.byte_size
+      # koppurai.increment!(:files_count)
+      koppurai.increment!(:total_size, blob.byte_size)
+
+      file_size = koppukal.koppu.blob.byte_size
 
       stats = Stat.instance
       stats.increment!(:current_uploads)
@@ -31,8 +48,8 @@ class DropController < ApplicationController
       )
 
       render json: {
-        link: share_url(upload.token),
-        id: upload.id
+        link: share_url(koppukal.share_key),
+        id: koppukal.id
       }
     else
       render json: { error: "Upload failed" }, status: 422

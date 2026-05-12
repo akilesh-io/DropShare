@@ -1,15 +1,34 @@
 class ShareController < ApplicationController
+  # def index
+  #   @koppukal = Koppu
+  #     .with_attached_koppu
+  #     .joins(:koppurai)
+  #     .where(koppurais: { share_key: params[:share_key] })
+  #     .order(created_at: :desc)
+  # end
+
   def index
-    @uploads = Koppu.with_attached_file.where(token: params[:token]).order(created_at: :desc)
+    @koppurai = Koppurai.find_by!(
+      share_key: params[:share_key]
+    )
+
+    @koppukal = @koppurai
+      .koppus
+      .with_attached_koppu
+      .order(created_at: :desc)
   end
 
-  def download
-    upload = Koppu.find_by!(token: params[:token])
-    return render plain: "Expired", status: 410 if upload.expired?
+  def download_koppu
+    koppu = Koppu.find_by!(share_key: params[:share_key])
+    return render plain: "Expired", status: 410 if koppu.koppurai.expired?
 
-    upload.increment!(:downloads)
+    koppu.increment!(:downloads_count)
     Stat.instance.increment!(:total_downloads)
 
-    redirect_to rails_blob_url(upload.file, disposition: "attachment")
+    redirect_to rails_blob_url(koppu.koppu, disposition: "attachment")
+  end
+
+  def download_koppurai
+    render plain: "ZIP download coming soon"
   end
 end
