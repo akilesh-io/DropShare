@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_151649) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_12_171510) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -48,6 +48,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_151649) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "koppurais", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "downloads_count"
+    t.datetime "expires_at"
+    t.string "password_digest"
+    t.string "session_id"
+    t.string "share_key"
+    t.string "title"
+    t.integer "total_size"
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_koppurais_on_session_id"
+    t.index ["share_key"], name: "index_koppurais_on_share_key"
+  end
+
+  create_table "koppus", force: :cascade do |t|
+    t.integer "byte_size"
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.integer "downloads_count"
+    t.integer "koppurai_id", null: false
+    t.string "path"
+    t.string "share_key"
+    t.datetime "updated_at", null: false
+    t.index ["koppurai_id"], name: "index_koppus_on_koppurai_id"
+    t.index ["share_key"], name: "index_koppus_on_share_key"
+  end
+
   create_table "stats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "current_size"
@@ -60,4 +88,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_151649) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "koppus", "koppurais"
 end
