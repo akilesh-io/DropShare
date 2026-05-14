@@ -1,30 +1,31 @@
-<% if koppu.koppu.video? %>
-  <video-player>
-    <video-skin class="video-compact">
-      <video src="<%= url_for(koppu.koppu) %>" playsinline preload="metadata"></video>
-    </video-skin>
-  </video-player>
+<% if koppu.koppu.attached? %>
+  <% if koppu.koppu.video? %>
+    <video-player>
+      <video-skin class="video-compact">
+        <video src="<%= url_for(koppu.koppu) %>" playsinline preload="metadata"></video>
+      </video-skin>
+    </video-player>
 
-<% elsif koppu.koppu.representable? %>
-  <%= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
+  <% elsif koppu.koppu.representable? %>
+    <%= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
 
-<% elsif koppu.koppu.audio? %>
-  <audio-player>
-    <audio-skin>
-      <audio src="<%= url_for(koppu.koppu) %>"></audio>
-    </audio-skin>
-  </audio-player>
+  <% elsif koppu.koppu.audio? %>
+    <audio-player>
+      <audio-skin>
+        <audio src="<%= url_for(koppu.koppu) %>"></audio>
+      </audio-skin>
+    </audio-player>
 
-<% elsif koppu.koppu.blob.content_type == "application/pdf" %>
-  <iframe src="<%= url_for(koppu.koppu) %>" width="250" height="300"></iframe>
+  <% elsif koppu.koppu.blob.content_type == "application/pdf" %>
+    <iframe src="<%= url_for(koppu.koppu) %>" width="250" height="300"></iframe>
 
-<% else %>
-  <div class="no-preview">
-    <%= link_to rails_blob_path(koppu.koppu, disposition: "attachment") do %>
-      <%= image_tag "no-preview.png", alt: "Download file" %>
-    <% end %>
-    <p>No preview available</p>
-  </div>
+  <% else %>
+    <div class="no-preview">
+      <%= link_to rails_blob_path(koppu.koppu, disposition: "attachment") do %>
+        <%= image_tag "no-preview.png", alt: "Download file" %>
+      <% end %>
+      <p>No preview available</p>
+    </div>
+  <% end %>
 <% end %>
-
 
