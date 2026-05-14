@@ -8,27 +8,16 @@ const input = document.getElementById("koppu")
 
 // if (!dz || !input) return
 
-let dragCounter = 0
-
-// --------------------------
-// CLICK UPLOAD
-// --------------------------
 dz.addEventListener("click", () => input.click())
-
-input.addEventListener("change", () => {
-  const file = input.files[0]
-  if (file) upload(file)
-})
-
-// --------------------------
-// LOCAL DROPZONE
-// --------------------------
 dz.addEventListener("dragover", (e) => e.preventDefault())
-
 dz.addEventListener("drop", (e) => {
   e.preventDefault()
-  const file = e.dataTransfer.files[0]
-  if (file) upload(file)
+  createFolder(e.dataTransfer.files)
+})
+input.addEventListener('change', (e) => {
+  createFolder(input.files)
+  // you might clear the selected files from the input
+  input.value = null
 })
 
 // prevent browser opening file
@@ -36,50 +25,28 @@ dz.addEventListener("drop", (e) => {
   document.addEventListener(event, (e) => e.preventDefault())
 })
 
-document.addEventListener("dragenter", () => {
-  dragCounter++
-})
+async function createFolder(files){
+    const token = document.querySelector('meta[name="csrf-token"]').content
+    const koppuraiRes = await fetch("/drop/new")
+    const koppurai = await koppuraiRes.json()
 
-document.addEventListener("dragleave", () => {
-  dragCounter--
-  if (dragCounter === 0) {
-  }
-})
+    const uploads = Array.from(files).map(file => {
+          return uploadFile(file, koppurai.id, token)
+    })
+    await Promise.all(uploads)
+}
 
-document.addEventListener("drop", (e) => {
-  dragCounter = 0
-
-  const file = e.dataTransfer.files[0]
-  if (file) upload(file)
-})
-
-// --------------------------
-// COPY BUTTON
-// --------------------------
-document.addEventListener("click", (e) => {
-  if (e.target.matches(".copy-btn")) {
-    const link = e.target.dataset.link
-    navigator.clipboard.writeText(link)
-
-    e.target.textContent = "Copied!"
-    setTimeout(() => (e.target.textContent = "Copy Link"), 1000)
-  }
-})
-
-// --------------------------
 // UPLOAD FUNCTION
-// --------------------------
-function upload(file) {
+function uploadFile(file, koppuraiId, token) {
   const url = input.dataset.directUploadUrl
-  const upload = new DirectUpload(file, url)
-  // const upload = new DirectUpload(file, url, {
-  //   directUploadWillStoreFileWithXHR: (xhr) => {
-  //     xhr.upload.addEventListener("progress", (event) => {
-  //       const progress = (event.loaded / event.total) * 100
-  //       console.log("Upload:", progress.toFixed(2) + "%")
-  //     })
-  //   }
-  // })
+  const upload = new DirectUpload(file, url, {
+    directUploadWillStoreFileWithXHR: (xhr) => {
+      xhr.upload.addEventListener("progress", (event) => {
+        const progress = (event.loaded / event.total) * 100
+        console.log("Upload:", progress.toFixed(2) + "%")
+      })
+    }
+  })
 
   upload.create((error, blob) => {
     if (error) {
@@ -88,11 +55,12 @@ function upload(file) {
       fetch("/drop", {
         method: "POST",
         headers: {
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+          "X-CSRF-Token": token,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          blob_signed_id: blob.signed_id
+          blob_signed_id: blob.signed_id,
+          koppurai_id: koppuraiId
         })
       })
       .then(res => res.json())
@@ -104,3 +72,14 @@ function upload(file) {
     }
   })
 }
+
+// COPY BUTTON
+document.addEventListener("click", (e) => {
+  if (e.target.matches(".copy-btn")) {
+    const link = e.target.dataset.link
+    navigator.clipboard.writeText(link)
+
+    e.target.textContent = "Copied!"
+    setTimeout(() => (e.target.textContent = "Copy Link"), 1000)
+  }
+})

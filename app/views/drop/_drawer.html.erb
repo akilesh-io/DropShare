@@ -1,14 +1,14 @@
 <h3 class="heading-xs">Share Files</h3>
 
 <% @koppurai.each do |koppurai| %>
-  <div class="koppurai"> 
+  <div class="koppurai" data-folder-id="<%= koppurai.id %>"> 
     <input value="<%= share_url(koppurai.share_key) %>" readonly />
     <button class="btn btn-primary copy-btn" data-link="<%= share_url(koppurai.share_key) %>">
       Copy
     </button>
 
     <% koppurai.koppus.each do |koppu| %>
-      <div class="koppu" title="<%= koppu.koppu.filename %>">
+      <div class="koppu" title="<%= koppu.koppu.filename %>" data-file-id="<%= koppu.id %>">
         <div class="file-preview">
           <%= render "/components/file_preview", koppu: koppu %>
         </div>
