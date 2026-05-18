@@ -34,9 +34,11 @@ pages/ → page-specific tweaks
 Naming convention class-based styling 
 
 ## DB Structure
-koppurai - கோப்புறை
-koppu - கோப்பு
+folders - koppuraikal - கோப்புறைகள்
+files - koppukal - கோப்புகள்
 stats
+
+bin/rails generate model Koppurai koppu:attachment
 
 ### TODO
 * remove unattached files - https://guides.rubyonrails.org/active_storage_overview.html#purging-unattached-uploads
@@ -48,3 +50,29 @@ stats
 ## Helper commands
 Rails.logger.info ("DEBUG :::: #{file_size}")
 
+
+
+### Delte all records and asserts
+
+**In production**
+```ruby
+ActiveStorage::Attachment.all.each { |attachment| attachment.purge }
+
+# remove orphan file records
+Koppu.left_joins(:koppu_attachment)
+      .where(active_storage_attachments: { id: nil })
+      .destroy_all
+
+# remove empty folders
+Koppurai.left_joins(:koppus)
+         .where(koppus: { id: nil })
+         .destroy_all
+```
+**In Dev**
+```ruby
+ActiveStorage::Attachment.delete_all
+ActiveStorage::Blob.delete_all
+
+Koppu.delete_all
+Koppurai.delete_all
+```
