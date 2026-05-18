@@ -16,8 +16,6 @@ dz.addEventListener("drop", (e) => {
 })
 input.addEventListener('change', (e) => {
   createFolder(input.files)
-  // you might clear the selected files from the input
-  input.value = null
 })
 
 // prevent browser opening file
