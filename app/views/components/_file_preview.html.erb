@@ -7,7 +7,7 @@
     </video-player>
 
   <% elsif koppu.koppu.representable? %>
-    <%= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
+    <%= image_tag koppu.koppu.representation(resize_to_limit: [1200, 1200], saver: { quality: 95 }) %>
 
   <% elsif koppu.koppu.audio? %>
     <audio-player>
