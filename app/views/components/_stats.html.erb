@@ -1,18 +1,20 @@
 <div>
   <div class="stats-card">
     <div class="stat">
-        <div class="value"><%= @stats.lifetime_uploads %></div>
+        <div class="value">
+            <%= number_to_human(@stats.lifetime_uploads, units: { thousand: "K", million: "M", billion: "B" }) %>
+        </div>
         <div class="label">Files Shared</div>
     </div>
 
     <div class="stat">
-        <div class="value"><%= (@stats.lifetime_size / 1.megabyte).round(2) %></div>
-        <div class="label">MB Uploaded</div>
+        <div class="value"><%= number_to_human_size(@stats.lifetime_size, precision: 2) %></div>
+        <div class="label">Uploaded</div>
     </div>
 
     <div class="stat">
-        <div class="value"><%= @stats.total_downloads %></div>
-        <div class="label">Downloads</div>
+      <div class="value"><%= @stats.estimated_co2_kg %> kg CO₂</div>
+      <div class="label">Emitted</div>
     </div>
   </div>
 </div>
