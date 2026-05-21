@@ -39,7 +39,7 @@ class ShareController < ApplicationController
       share_key: params[:share_key]
     )
 
-    render plain: "Page not found or link expired"
+    render plain: "Page not found or link expired" if @koppurai.nil?
     # redirect_to root_path, alert: "Page not found or link expired" if @koppurai.nil?
   end
 end
