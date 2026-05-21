@@ -1,4 +1,5 @@
 class ShareController < ApplicationController
+  before_action :file_exist
   # def index
   #   @koppukal = Koppu
   #     .with_attached_koppu
@@ -30,5 +31,15 @@ class ShareController < ApplicationController
 
   def download_koppurai
     render plain: "ZIP download coming soon"
+  end
+
+  private
+  def file_exist
+    @koppurai = Koppurai.find_by(
+      share_key: params[:share_key]
+    )
+
+    render plain: "Page not found or link expired"
+    # redirect_to root_path, alert: "Page not found or link expired" if @koppurai.nil?
   end
 end
