@@ -4,7 +4,6 @@ class DropController < ApplicationController
   def index
     @koppurai = Koppurai
       .includes(koppus: [koppu_attachment: :blob])
-      # .joins(koppus: :koppu_attachment)
       .where(session_id: session[:user_id])
       .order(created_at: :desc)
     @stats = Stat.instance
@@ -37,13 +36,6 @@ class DropController < ApplicationController
 
     if koppukal.save
       koppurai.increment!(:total_size, blob.byte_size)
-      stats = Stat.instance
-      stats.increment!(:current_uploads)
-      stats.increment!(:lifetime_uploads)
-      stats.update!(
-        current_size: stats.current_size + blob.byte_size,
-        lifetime_size: stats.lifetime_size + blob.byte_size
-      )
 
       render json: {
         link: share_url(koppukal.share_key),
@@ -52,6 +44,28 @@ class DropController < ApplicationController
     else
       render json: { error: "Upload failed" }, status: 422
     end
+  end
+
+  def destroy_koppurai
+    koppurai = Koppurai.find(params[:id])
+    return head :forbidden unless koppurai.session_id == session[:user_id]
+
+    koppurai.koppus.each do |koppu|
+      koppu.koppu.purge
+    end
+    koppurai.destroy
+
+    redirect_to root_path, notice: "Folder deleted"
+  end
+
+  def destroy_koppu
+    koppu = Koppu.find(params[:id])
+    return head :forbidden unless koppu.koppurai.session_id == session[:user_id]
+    
+    koppu.koppu.purge
+    koppu.destroy
+
+    redirect_to root_path, notice: "File deleted"
   end
 
   private
