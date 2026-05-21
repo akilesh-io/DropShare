@@ -66,6 +66,42 @@
 .folder-title{
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.folder-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+  color: var(--gray-11);
+}
+
+.folder-meta > div {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.folder-meta svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .folder-meta {
+    gap: 0.35rem;
+    font-size: 0.8rem;
+  }
+
+  .folder-meta svg {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .file-group {
@@ -98,18 +134,10 @@
   display: block;
 }
 
-.file-preview .icon-btn {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  z-index: 10;
-
+.icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 32px;
-  height: 32px;
 
   border: none;
   border-radius: 6px;
@@ -120,7 +148,25 @@
   cursor: pointer;
 }
 
-.file-preview .icon-btn:hover { 
+.file-preview 
+.icon-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+
+  z-index: 10;
+}
+
+.folder-actions
+.icon-btn {
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+
+}
+ .icon-btn:hover { 
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(2px);
 }
@@ -155,6 +201,63 @@
   text-align: center;
   margin: 1rem;
 }
+
+
+.folder-link {
+  display: flex;
+  align-items: center;
+}
+.folder-link input {
+  width: 320px;
+  max-width: 45vw;
+  padding: 0.5rem 0.9rem;
+
+  border: 1px solid var(--gray-6);
+  border-radius: 6px 0px 0px 16px;
+
+  background: var(--gray-2);
+  color: var(--gray-12);
+
+  font-size: 0.9rem;
+}
+
+.folder-link input:focus {
+  outline: none;
+  border-color: var(--accent-9);
+}
+.copy-btn {
+  white-space: nowrap;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  border-radius: 0px 6px 6px 0px;
+}
+.folder-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .folder-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .folder-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .folder-link {
+    flex: 1;
+  }
+
+  .folder-link input {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 
 .footer-love a {
   color: inherit;
