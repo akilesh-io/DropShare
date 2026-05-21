@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root "drop#index"
-  resources :drop, only: [:index, :new, :create]
+  resources :drop, only: [:index, :new, :create] do
+    member do
+      delete :destroy_koppurai
+      delete :destroy_koppu
+    end
+  end
   mount MissionControl::Jobs::Engine, at: "/jobs"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
