@@ -82,6 +82,75 @@
   border: 1.5px solid var(--gray-9);
 }
 
+.file-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--dark);
+}
+
+.file-preview img,
+.file-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.file-preview .icon-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 6px;
+  color: white;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.file-preview .icon-btn:hover { 
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0.5rem;
+}
+
+.file-meta p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.file-meta p:first-child {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.add-file {
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
 .footer-love {
   text-align: center;
   margin: 1rem;
