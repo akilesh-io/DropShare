@@ -237,6 +237,10 @@
   gap: 0.75rem;
 }
 
+.no-preview{
+  padding: 1.3rem;
+}
+
 @media (max-width: 768px) {
   .folder-title {
     flex-direction: column;
