@@ -5,7 +5,6 @@
 
 <%#= form_with(model: @koppukal, url: drop_index_path, method: :post, multipart: true) do |form| %>
 <%= form_with(url: drop_index_path, method: :post, multipart: true) do |form| %>
-   <!-- webkitdirectory: true, -->
    <%= form.file_field :koppu, multiple: true, direct_upload: true, hidden: true %>
    <%= form.submit "Upload", hidden: true %>
 <% end %>
