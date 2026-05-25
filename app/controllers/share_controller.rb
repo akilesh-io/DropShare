@@ -1,5 +1,5 @@
 class ShareController < ApplicationController
-  before_action :file_exist
+  before_action :file_exist, only: [:index]
   # def index
   #   @koppukal = Koppu
   #     .with_attached_koppu
