@@ -112,6 +112,7 @@
 }
 
 .file {
+  min-height: 150px;
   width: 8rem;
   border-radius: 8px;
   overflow: hidden;
