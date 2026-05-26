@@ -270,6 +270,18 @@
   }
 }
 
+.add-file-btn {
+  background: transparent;
+  color: var(--light);
+  cursor: pointer;
+}
+
+.add-file-btn:hover {
+  transition: all 0.2s ease;
+  background: var(--gray-3);
+  color: var(--light);
+  cursor: pointer;
+}
 
 .footer-love a {
   color: inherit;
