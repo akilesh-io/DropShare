@@ -15,11 +15,7 @@ class DropController < ApplicationController
       session_id: session[:user_id]
     )
 
-    render json: {
-      id: koppurai.id,
-      share_key: koppurai.share_key,
-      url: share_url(koppurai.share_key)
-    }
+    render partial: "drop/folder", locals: { koppurai: koppurai }, layout: false
   end
 
   def create

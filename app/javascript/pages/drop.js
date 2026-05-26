@@ -48,10 +48,40 @@ document.addEventListener('change', (e) => {
 
 async function createFolder(files){
   const token = document.querySelector('meta[name="csrf-token"]').content
-  const koppuraiRes = await fetch("/drop/new")
-  const koppurai = await koppuraiRes.json()
 
-  const uploads = Array.from(files).map(file => uploadFile(file, koppurai.id, token))
+  // create new folder on server and receive rendered folder HTML
+  const res = await fetch('/drop/new', { headers: { 'Accept': 'text/html' } })
+  if (!res.ok) {
+    console.error('Failed to create folder', res.status)
+    return
+  }
+  const html = await res.text()
+  if (!html || !html.trim()) {
+    console.error('Empty folder HTML from server')
+    return
+  }
+
+  // parse and insert the new folder element
+  const temp = document.createElement('div')
+  temp.innerHTML = html
+  const folderEl = temp.firstElementChild
+  const drawer = document.getElementById('drawer-folders') || document.querySelector('.drawer')
+  if (drawer && folderEl) {
+    const firstChild = drawer.firstElementChild
+    if (firstChild) {
+      drawer.insertBefore(folderEl, firstChild)
+    } else {
+      drawer.appendChild(folderEl)
+    }
+  }
+
+  const koppuraiId = folderEl && folderEl.dataset && folderEl.dataset.folderId
+  if (!koppuraiId) {
+    console.error('Could not determine new koppurai id')
+    return
+  }
+
+  const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
   try {
     await Promise.all(uploads)
   } catch (err) {
