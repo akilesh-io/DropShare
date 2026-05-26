@@ -8,6 +8,8 @@ const mainInput = document.getElementById("koppu")
 
 if (mainInput) mainInput.multiple = true
 
+let currentDragFolder = null
+
 if (dz && mainInput) {
   dz.addEventListener("click", () => mainInput.click())
   dz.addEventListener("dragover", (e) => e.preventDefault())
@@ -20,8 +22,54 @@ if (dz && mainInput) {
   })
 }
 
-// prevent browser opening file
-;["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
+// folder-level drag/drop support
+document.addEventListener("dragover", (event) => {
+  const folder = event.target.closest('.folder')
+  if (folder) {
+    event.preventDefault()
+    folder.classList.add('folder-drag-over')
+    currentDragFolder = folder
+  }
+})
+
+document.addEventListener('dragenter', (event) => {
+  const folder = event.target.closest('.folder')
+  if (!folder) return
+  if (currentDragFolder && currentDragFolder !== folder) {
+    currentDragFolder.classList.remove('folder-drag-over')
+  }
+  currentDragFolder = folder
+  folder.classList.add('folder-drag-over')
+})
+
+document.addEventListener('dragleave', (event) => {
+  const folder = event.target.closest('.folder')
+  if (!folder) return
+  const related = event.relatedTarget
+  if (related && folder.contains(related)) return
+  folder.classList.remove('folder-drag-over')
+  if (currentDragFolder === folder) currentDragFolder = null
+})
+
+document.addEventListener("drop", (event) => {
+  const folder = event.target.closest('.folder')
+  if (!folder) return
+
+  event.preventDefault()
+  event.stopPropagation()
+  folder.classList.remove('folder-drag-over')
+  currentDragFolder = null
+
+  const files = event.dataTransfer.files
+  const koppuraiId = folder.dataset.folderId
+  const token = document.querySelector('meta[name="csrf-token"]').content
+  if (!files || !files.length || !koppuraiId) return
+
+  uploadFilesToKoppurai(files, koppuraiId, token)
+})
+
+// prevent browser opening file on any drag/drop outside targets
+;["dragenter", "dragleave"].forEach(event => {
   document.addEventListener(event, (e) => e.preventDefault())
 })
 
