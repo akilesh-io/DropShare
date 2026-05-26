@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="file-group">
+    <div class="file-group" id="folder-<%= koppurai.id %>-files">
       <% koppurai.koppus.each do |koppu| %>
         <div class="file" title="<%= koppu.koppu.filename %>" data-file-id="<%= koppu.id %>">
           <div class="file-preview">
@@ -52,11 +52,13 @@
           </div>
         </div>
       <% end %>
-      <div class="file">
+      <input type="file" multiple class="koppu-input" id="koppu-input-<%= koppurai.id %>" data-koppurai-id="<%= koppurai.id %>" style="display:none" />
+
+      <button type="button" class="file add-file-btn" data-koppurai-id="<%= koppurai.id %>">
         <div class="add-file">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </div>
-      </div>
+      </button>
     </div>
   </div>
 <% end %>

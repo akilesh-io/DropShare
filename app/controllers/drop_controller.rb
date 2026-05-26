@@ -37,10 +37,11 @@ class DropController < ApplicationController
     if koppukal.save
       koppurai.increment!(:total_size, blob.byte_size)
 
-      render json: {
-        link: share_url(koppukal.share_key),
-        id: koppukal.id
-      }
+      # render json: {
+      #   link: share_url(koppukal.share_key),
+      #   id: koppukal.id
+      # }
+      render partial: "components/file_item", locals: { koppu: koppukal }, layout: false
     else
       render json: { error: "Upload failed" }, status: 422
     end
