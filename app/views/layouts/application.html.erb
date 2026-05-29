@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%= content_for(:title) || "Drop Share" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= content_for(:title) || "DropShare - Free File Sharing Platform | No Login, Private & Open Source" %></title>
+    <meta name="description" content="DropShare is a free, open source file sharing platform with no login required. Upload files instantly and share secure, private download links.">    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Drop Share">
     <meta name="mobile-web-app-capable" content="yes">
@@ -18,11 +18,11 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/video.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/audio.js"></script>
   </head>
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
     <%= yield %>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/video.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/audio.js"></script>
   </body>
 </html>
