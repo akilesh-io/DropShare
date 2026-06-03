@@ -6,8 +6,8 @@
 
   <% elsif koppu.koppu.representable? %>
     <!-- todo: for addmin show loq quality for user show high quilty -->
-    <%= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
-    <%#= image_tag koppu.koppu.representation(resize_to_limit: [1200, 1200], saver: { quality: 95 }) %>
+    <%#= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
+    <%= image_tag koppu.koppu.representation(resize_to_limit: [1200, 1200], saver: { quality: 95 }) %>
 
   <% elsif koppu.koppu.audio? %>
     <!-- <audio controls preload="metadata" class="audio-preview"> -->
