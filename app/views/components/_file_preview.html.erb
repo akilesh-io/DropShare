@@ -1,10 +1,8 @@
 <% if koppu.koppu.attached? %>
   <% if koppu.koppu.video? %>
-    <video-player>
-      <video-skin class="video-compact">
-        <video src="<%= url_for(koppu.koppu) %>" playsinline preload="metadata"></video>
-      </video-skin>
-    </video-player>
+    <video controls muted playsinline preload="metadata" class="video-preview">
+      <source src="<%= url_for(koppu.koppu) %>" type="<%= koppu.koppu.content_type %>">
+    </video>
 
   <% elsif koppu.koppu.representable? %>
     <!-- todo: for addmin show loq quality for user show high quilty -->
@@ -12,12 +10,23 @@
     <%#= image_tag koppu.koppu.representation(resize_to_limit: [1200, 1200], saver: { quality: 95 }) %>
 
   <% elsif koppu.koppu.audio? %>
-    <audio-player>
-      <audio-skin>
-        <audio src="<%= url_for(koppu.koppu) %>"></audio>
-      </audio-skin>
-    </audio-player>
+    <!-- <audio controls preload="metadata" class="audio-preview"> -->
+    <!--   <source src="<%= url_for(koppu.koppu) %>" type="<%= koppu.koppu.content_type %>"> -->
+    <!--   Your browser does not support the audio element. -->
+    <!-- </audio> -->
+<div class="audio-player" data-audio-player>
+  <audio preload="metadata">
+    <source src="<%= url_for(koppu.koppu) %>" type="<%= koppu.koppu.content_type %>">
+  </audio>
 
+  <svg class="audio-wheel" viewBox="0 0 120 120">
+    <circle class="wheel-bg" cx="60" cy="60" r="48" />
+    <circle class="wheel-progress" cx="60" cy="60" r="48" />
+  </svg>
+
+  <button class="audio-btn">▶</button>
+  <div class="audio-time">0:00</div>
+</div>
   <% elsif koppu.koppu.blob.content_type == "application/pdf" %>
     <iframe src="<%= url_for(koppu.koppu) %>" width="250" height="300"></iframe>
 
@@ -29,4 +38,68 @@
     </div>
   <% end %>
 <% end %>
+
+<style>
+.video-preview {
+  width: 100%;
+  max-width: 250px;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.audio-player {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-wheel {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  cursor: pointer;
+}
+
+.wheel-bg {
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 8;
+}
+
+.wheel-progress {
+  fill: none;
+  stroke: #0a64bc;
+  stroke-width: 8;
+  stroke-linecap: round;
+
+  stroke-dasharray: 314.16;
+  stroke-dashoffset: 314.16;
+}
+
+.audio-btn {
+  position: absolute;
+
+  width: 94px;
+  height: 93px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+  cursor: pointer;
+
+  box-shadow: 0 2px 10px rgb(0 0 0 / .1);
+}
+
+.audio-time {
+  position: absolute;
+  bottom: 24px;
+
+  font-size: 12px;
+  color: #666;
+}
+</style>
 
