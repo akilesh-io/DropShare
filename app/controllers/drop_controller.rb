@@ -37,7 +37,7 @@ class DropController < ApplicationController
       #   link: share_url(koppukal.share_key),
       #   id: koppukal.id
       # }
-      render partial: "components/file_item", locals: { koppu: koppukal }, layout: false
+      render partial: "components/file_item", locals: { koppu: koppukal, is_admin: true }, layout: false
     else
       render json: { error: "Upload failed" }, status: 422
     end

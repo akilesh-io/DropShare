@@ -33,7 +33,7 @@
 
   <div class="file-group" id="folder-<%= koppurai.id %>-files">
     <% koppurai.koppus.each do |koppu| %>
-      <%= render "/components/file_item", koppu: koppu %>
+      <%= render "/components/file_item", koppu: koppu, is_admin: true %>
     <% end %>
 
     <input type="file" multiple class="koppu-input" id="koppu-input-<%= koppurai.id %>" data-koppurai-id="<%= koppurai.id %>" style="display:none" />
