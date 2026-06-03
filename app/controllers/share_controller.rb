@@ -30,9 +30,13 @@ class ShareController < ApplicationController
   end
 
   def download_koppurai
-    render plain: "ZIP download coming soon"
-  end
+    # render plain: "ZIP download coming soon"
+    @koppurai = Koppurai
+      .includes(koppus: [koppu_attachment: :blob])
+      .find_by!(share_key: params[:share_key])
 
+    return render plain: "Expired", status: :gone if @koppurai.expired?
+  end
   private
   def file_exist
     @koppurai = Koppurai.find_by(

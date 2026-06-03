@@ -1,9 +1,16 @@
 <div class="file" title="<%= koppu.koppu.filename %>" data-file-id="<%= koppu.id %>">
   <div class="file-preview">
-    <%= button_to destroy_koppu_drop_path(koppu), method: :delete, class: "icon-btn",
-        form: { data: { turbo_confirm: "Delete this file?" } } do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+     <% if local_assigns[:is_admin] %>
+      <%= button_to destroy_koppu_drop_path(koppu), method: :delete, class: "icon-btn",
+          form: { data: { turbo_confirm: "Delete this file?" } } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      <% end %>
+    <% else %>
+      <%= button_to download_koppu_path(share_key: koppu.share_key), method: :get, target: "_blank", class: "icon-btn", data: { turbo: false } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10L12 15 17 10"></path><path d="M12 15L12 3"></path></g></svg>
+      <% end %>
     <% end %>
+
     <%= render "/components/file_preview", koppu: koppu %>
   </div>
 
