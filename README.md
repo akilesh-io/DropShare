@@ -10,7 +10,7 @@ https://github.com/dmhendricks/file-icon-vectors
 
 
 https://oneuptime.com/blog/post/2026-01-27-rails-activestorage-file-uploads/view
-
+https://youtu.be/wFUy120Fts8
 
 ### Application
 ![Application Design Structure](public/readme/skeleton.png)
@@ -61,7 +61,9 @@ bin/rails generate model Koppurai koppu:attachment
 * Serve Large files directly - https://writesoftwarewell.com/serving-large-files-rails-nginx-thruster
 * Optimise rails Sqlite - https://fractaledmind.com/2024/04/15/sqlite-on-rails-the-how-and-why-of-optimal-performance/
 * use import map - https://videojs.org/
-
+* Paste files to upload
+* Toaster and file progress
+* Direct upload & large file upload
 
 ## Helper commands
 Rails.logger.info ("DEBUG :::: #{file_size}")
