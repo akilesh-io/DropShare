@@ -16,6 +16,7 @@
 
   <div class="file-meta">
     <p class="text-xs"><%= truncate(koppu.koppu.filename.to_s, length: 28) %></p>
+    <!-- <p class="text-xs">Downloads: <%= koppu.downloads_count %></p> -->
     <p class="text-xs"><%= number_to_human_size(koppu.byte_size) %></p>
   </div>
 </div>
