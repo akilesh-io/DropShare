@@ -17,7 +17,6 @@ function initAudioPlayers() {
     const progress = player.querySelector(".wheel-progress")
     const wheel = player.querySelector(".audio-wheel")
     const time = player.querySelector(".audio-time")
-
     const circumference = 314.16
 
     btn.addEventListener("click", () => {
@@ -62,7 +61,6 @@ function initAudioPlayers() {
 
     wheel.addEventListener("click", e => {
       const rect = wheel.getBoundingClientRect()
-
       const x = e.clientX - rect.left - rect.width / 2
       const y = e.clientY - rect.top - rect.height / 2
 

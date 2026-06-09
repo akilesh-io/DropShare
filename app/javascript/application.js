@@ -1,9 +1,6 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
-import "controllers"
-import "pages/drop"
-import "components/audio"
-import "components/download_all"
+import "components"
 
 // Controller & Action Name
 const controller = document.body.dataset.controller
