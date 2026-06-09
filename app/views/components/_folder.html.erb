@@ -56,23 +56,3 @@
 </div>
 
 
-<script>
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".download-all-btn")
-  if (!btn) return
-
-  const folder = btn.closest(".folder")
-  const urls = JSON.parse(folder.dataset.downloadUrls)
-
-  urls.forEach((url, index) => {
-    setTimeout(() => {
-      const a = document.createElement("a")
-      a.href = url
-      a.download = ""
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-    }, index * 250)
-  })
-})
-</script>
