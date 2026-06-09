@@ -15,7 +15,7 @@ class DropController < ApplicationController
       session_id: session[:user_id]
     )
 
-    render partial: "drop/folder", locals: { koppurai: koppurai }, layout: false
+    render partial: "components/folder", locals: { koppurai: koppurai, is_admin: true }, layout: false
   end
 
   def create
@@ -33,10 +33,6 @@ class DropController < ApplicationController
     if koppukal.save
       koppurai.increment!(:total_size, blob.byte_size)
 
-      # render json: {
-      #   link: share_url(koppukal.share_key),
-      #   id: koppukal.id
-      # }
       render partial: "components/file_item", locals: { koppu: koppukal, is_admin: true }, layout: false
     else
       render json: { error: "Upload failed" }, status: 422

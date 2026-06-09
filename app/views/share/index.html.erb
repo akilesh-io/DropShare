@@ -1,3 +1,3 @@
 <h1><%= @koppurai.title || "Shared Files" %></h1>
-<%= render partial: "share/folder", locals: { koppurai: @koppurai }, layout: false %>
+<%= render partial: "components/folder", locals: { koppurai: @koppurai , is_admin: true}, layout: false %>
 
