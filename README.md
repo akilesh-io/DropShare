@@ -11,6 +11,7 @@ https://github.com/dmhendricks/file-icon-vectors
 
 https://oneuptime.com/blog/post/2026-01-27-rails-activestorage-file-uploads/view
 https://youtu.be/wFUy120Fts8
+https://avohq.io/blog/rails-s3-direct-uploads
 
 ### Application
 ![Application Design Structure](public/readme/skeleton.png)
