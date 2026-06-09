@@ -22,7 +22,9 @@
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
     <%= yield %>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/video.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/cdn/audio.js"></script>
+
+    <div class="footer-love">
+      Crafted With 💙 by <%= link_to "Akilesh", "https://akilesh.in", target: "_blank", rel: "noopener" %>
+    </div>
   </body>
 </html>
