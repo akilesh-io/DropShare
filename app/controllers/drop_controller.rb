@@ -22,6 +22,8 @@ class DropController < ApplicationController
     return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
 
     koppurai = Koppurai.find(params[:koppurai_id])
+    return head :forbidden unless koppurai.session_id == session[:user_id]
+
     blob = ActiveStorage::Blob.find_signed!(params[:blob_signed_id])
     koppukal = koppurai.koppus.new(
       byte_size: blob.byte_size,
