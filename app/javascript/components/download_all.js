@@ -6,7 +6,6 @@ function download(url) {
 }
 
 document.addEventListener("click", (e) => {
-  console.log("aaaaaaaaaaaaaaa");
   const btn = e.target.closest(".download-all-btn")
   if (!btn) return
 
