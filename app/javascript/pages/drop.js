@@ -65,7 +65,7 @@ document.addEventListener("drop", (event) => {
   const token = document.querySelector('meta[name="csrf-token"]').content
   if (!files || !files.length || !koppuraiId) return
 
-  uploadFilesToKoppurai(files, koppuraiId, token)
+  uploadFilesToFolder(files, koppuraiId, token)
 })
 
 // prevent browser opening file on any drag/drop outside targets
@@ -90,7 +90,7 @@ document.addEventListener('change', (e) => {
   const koppuraiId = el.dataset.koppuraiId
   if (!files || !files.length) return
   const token = document.querySelector('meta[name="csrf-token"]').content
-  uploadFilesToKoppurai(files, koppuraiId, token)
+  uploadFilesToFolder(files, koppuraiId, token)
   el.value = null
 })
 
@@ -138,7 +138,7 @@ async function createFolder(files){
   }
 }
 
-function uploadFilesToKoppurai(files, koppuraiId, token) {
+function uploadFilesToFolder(files, koppuraiId, token) {
   const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
   return Promise.all(uploads)
 }
