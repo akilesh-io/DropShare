@@ -32,6 +32,9 @@ rails -v 8.1.3
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
+```bash
+
+```kamal deplou --no-cache
 
 * Primary colour
 #000F89 - https://en.wikipedia.org/wiki/Copper_phthalocyanine
@@ -50,6 +53,13 @@ pages/ → page-specific tweaks
 
 Naming convention class-based styling 
 
+
+## Javascript
+*SSR in Rails*
+```js
+
+```
+
 ## DB Structure
 folders - koppuraikal - கோப்புறைகள்
 files - koppukal - கோப்புகள்
@@ -67,7 +77,9 @@ bin/rails generate model Koppurai koppu:attachment
 * Direct upload & large file upload
 
 ## Helper commands
+```ruby
 Rails.logger.info ("DEBUG :::: #{file_size}")
+```
 
 
 
