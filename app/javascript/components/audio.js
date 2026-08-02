@@ -77,5 +77,6 @@ function initAudioPlayers() {
   })
 }
 
-document.addEventListener("turbo:load", initAudioPlayers)
+initAudioPlayers()
+// document.addEventListener("turbo:load", initAudioPlayers)
 
