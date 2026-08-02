@@ -98,7 +98,10 @@ async function createFolder(files){
   const token = document.querySelector('meta[name="csrf-token"]').content
 
   // create new folder on server and receive rendered folder HTML
-  const res = await fetch('/drop/new', { headers: { 'Accept': 'text/html' } })
+  const res = await fetch('/drop/new', {
+    method: 'POST',
+    headers: { 'Accept': 'text/html', 'X-CSRF-Token': token }
+  })
   if (!res.ok) {
     console.error('Failed to create folder', res.status)
     return
@@ -132,7 +135,6 @@ async function createFolder(files){
   const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
   try {
     await Promise.all(uploads)
-    // window.location.reload()
   } catch (err) {
     console.error('One or more uploads failed', err)
   }
@@ -176,7 +178,13 @@ function uploadFile(file, koppuraiId, token) {
           koppurai_id: koppuraiId
         })
       })
-      .then(res => res.text())
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data.error || `Upload failed (${res.status})`)
+        }
+        return res.text()
+      })
       .then(html => {
         const target = document.getElementById(`folder-${koppuraiId}-files`)
         const addBtn = target ? target.querySelector('.add-file-btn') : null
