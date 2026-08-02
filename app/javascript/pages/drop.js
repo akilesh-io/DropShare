@@ -132,7 +132,7 @@ async function createFolder(files){
   const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
   try {
     await Promise.all(uploads)
-    window.location.reload()
+    // window.location.reload()
   } catch (err) {
     console.error('One or more uploads failed', err)
   }
