@@ -1,4 +1,4 @@
-<div class="folder" data-folder-id="<%= koppurai.id %>" data-download-urls="<%= koppurai.koppus.map { |k| rails_blob_path(k.koppu, disposition: "attachment") }.to_json %>">
+<div class="folder" data-folder-id="<%= koppurai.id %>" data-download-urls="<%= koppurai.koppus.map { |k| download_koppu_path(share_key: k.share_key) }.to_json %>">
   <div class="folder-title">
     <div class="folder-meta">
       <div>Expires in <%= time_ago_in_words(koppurai.expires_at) %></div>

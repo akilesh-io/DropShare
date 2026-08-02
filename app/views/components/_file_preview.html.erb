@@ -32,7 +32,7 @@
 
   <% else %>
     <div class="no-preview">
-      <%= link_to rails_blob_path(koppu.koppu, disposition: "attachment") do %>
+      <%= link_to download_koppu_path(share_key: koppu.share_key) do %>
         <%= image_tag attachment_icon(koppu.koppu.blob) , alt: "Download file" %>
       <% end %>
     </div>
