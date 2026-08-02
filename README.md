@@ -81,7 +81,8 @@ bin/rails generate model Koppurai koppu:attachment
 Rails.logger.info ("DEBUG :::: #{file_size}")
 ```
 
-
+**View Jobs**
+https://github.com/rails/mission_control-jobs
 
 ### Delte all records and asserts
 
