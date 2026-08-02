@@ -6,5 +6,5 @@ import "components"
 const controller = document.body.dataset.controller
 const action = document.body.dataset.action
 if (controller) {
-  import(`pages/${controller}`)
+  import(`pages/${controller}`).catch(() => {})
 }
