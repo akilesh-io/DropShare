@@ -15,40 +15,35 @@ class DropController < ApplicationController
       session_id: session[:user_id]
     )
 
-    render partial: "components/folder", locals: { koppurai: koppurai, is_admin: true }, layout: false
+    render partial: "components/folder", formats: [:html], locals: { koppurai: koppurai, is_owner: true }, layout: false
   end
 
   def create
-    return render json: { error: "No file" }, status: 400 unless params[:blob_signed_id]
+    return render json: { error: "No file" }, status: :bad_request unless params[:blob_signed_id]
 
-    koppurai = Koppurai.find(params[:koppurai_id])
     koppurai = Koppurai.find_by!(id: params[:koppurai_id], session_id: session[:user_id])
-    return head :forbidden unless koppurai.session_id == session[:user_id]
-
     blob = ActiveStorage::Blob.find_signed!(params[:blob_signed_id])
-    koppukal = koppurai.koppus.new(
+
+    koppu = koppurai.koppus.new(
       byte_size: blob.byte_size,
       content_type: blob.content_type,
       checksum: blob.checksum
     )
-    koppukal.koppu.attach(blob)
+    koppu.koppu.attach(blob)
 
-    if koppukal.save
-      koppurai.increment!(:total_size, blob.byte_size)
-
-      render partial: "components/file_item", locals: { koppu: koppukal, is_admin: true }, layout: false
+    if koppu.save
+      render partial: "components/file_item", formats: [:html], locals: { koppu: koppu, is_owner: true }, layout: false
     else
-      render json: { error: "Upload failed" }, status: 422
+      render json: { error: koppu.errors.full_messages.to_sentence.presence || "Upload failed" }, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordNotFound, ActiveSupport::MessageVerifier::InvalidSignature
+    render json: { error: "Upload failed" }, status: :not_found
   end
 
   def destroy_koppurai
     koppurai = Koppurai.find(params[:id])
     return head :forbidden unless koppurai.session_id == session[:user_id]
 
-    koppurai.koppus.each do |koppu|
-      koppu.koppu.purge
-    end
     koppurai.destroy
 
     redirect_to root_path, notice: "Folder deleted"
@@ -57,8 +52,7 @@ class DropController < ApplicationController
   def destroy_koppu
     koppu = Koppu.find(params[:id])
     return head :forbidden unless koppu.koppurai.session_id == session[:user_id]
-    
-    koppu.koppu.purge
+
     koppu.destroy
 
     redirect_to root_path, notice: "File deleted"

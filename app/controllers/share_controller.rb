@@ -1,49 +1,33 @@
 class ShareController < ApplicationController
-  before_action :file_exist, only: [:index]
-  # def index
-  #   @koppukal = Koppu
-  #     .with_attached_koppu
-  #     .joins(:koppurai)
-  #     .where(koppurais: { share_key: params[:share_key] })
-  #     .order(created_at: :desc)
-  # end
+  before_action :set_koppurai, only: [:index]
+  before_action :ensure_not_expired, only: [:index]
 
   def index
-    @koppurai = Koppurai.find_by!(
-      share_key: params[:share_key]
-    )
-
-    @koppukal = @koppurai
-      .koppus
-      .with_attached_koppu
-      .order(created_at: :desc)
   end
 
   def download_koppu
     koppu = Koppu.find_by!(share_key: params[:share_key])
-    return render plain: "Expired", status: 410 if koppu.koppurai.expired?
+    return render plain: "Expired", status: :gone if koppu.koppurai.expired?
 
     koppu.increment!(:downloads_count)
+    Koppurai.update_counters(koppu.koppurai_id, downloads_count: 1)
     Stat.instance.increment!(:total_downloads)
 
     redirect_to rails_blob_url(koppu.koppu, disposition: "attachment")
+  rescue ActiveRecord::RecordNotFound
+    render plain: "Page not found or link expired", status: :not_found
   end
 
-  def download_koppurai
-    # render plain: "ZIP download coming soon"
+  private
+
+  def set_koppurai
     @koppurai = Koppurai
       .includes(koppus: [koppu_attachment: :blob])
-      .find_by!(share_key: params[:share_key])
-
-    return render plain: "Expired", status: :gone if @koppurai.expired?
+      .find_by(share_key: params[:share_key])
+    render plain: "Page not found or link expired", status: :not_found if @koppurai.nil?
   end
-  private
-  def file_exist
-    @koppurai = Koppurai.find_by(
-      share_key: params[:share_key]
-    )
 
-    render plain: "Page not found or link expired" if @koppurai.nil?
-    # redirect_to root_path, alert: "Page not found or link expired" if @koppurai.nil?
+  def ensure_not_expired
+    render plain: "Expired", status: :gone if @koppurai&.expired?
   end
 end
