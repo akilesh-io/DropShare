@@ -4,7 +4,8 @@ class Koppurai < ApplicationRecord
   before_create :generate_share_key
   validates :expires_at, presence: true
   # has_secure_password validations: false
-  # after_create :schedule_cleanup
+  after_create :schedule_cleanup
+
  
   def expired?
     expires_at < Time.current
@@ -21,6 +22,6 @@ class Koppurai < ApplicationRecord
   end
 
   def schedule_cleanup
-    # CleanupUploadJob.set(wait_until: expires_at).perform_later(id)
+    CleanupUploadJob.set(wait_until: expires_at).perform_later(id)
   end
 end

@@ -1,18 +1,16 @@
 class CleanupUploadJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(id)
+    Rails.logger.info("DEBUG :: id #{id}")
     upload = Koppu.find_by(id: id)
+    Rails.logger.info("DEBUG :: #{upload} :: #{id}")
     return unless upload
 
-    size = upload.file.blob.byte_size
-    stats = Stat.instance
-    stats.update!(
-      current_uploads: stats.current_uploads - 1,
-      current_size: stats.current_size - size
-    )
+    size = upload.koppu.blob.byte_size
 
-    upload.file.purge if upload.file.attached?
+    upload.koppu.purge if upload.koppu.attached?
     upload.destroy
   end
 end
+
