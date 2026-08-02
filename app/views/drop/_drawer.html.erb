@@ -1,6 +1,6 @@
 <h3 class="heading-xs">Share Files</h3>
 
 <% @koppurai.each do |koppurai| %>
-    <%= render partial: "components/folder", locals: { koppurai: koppurai , is_admin: true}, layout: false %>
+    <%= render partial: "components/folder", locals: { koppurai: koppurai , is_owner: true}, layout: false %>
 <% end %>
 
