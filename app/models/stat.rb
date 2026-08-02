@@ -11,29 +11,18 @@ class Stat < ApplicationRecord
   end
 
   def self.add_upload(byte_size:, count: 1)
-    stats = instance
-
-    stats.update!(
-      current_uploads: stats.current_uploads + count,
-      lifetime_uploads: stats.lifetime_uploads + count,
-      current_size: stats.current_size + byte_size,
-      lifetime_size: stats.lifetime_size + byte_size
+    update_counters(instance.id,
+      current_uploads: count,
+      lifetime_uploads: count,
+      current_size: byte_size,
+      lifetime_size: byte_size
     )
   end
 
   def self.remove_upload(byte_size:, count: 1)
-    stats = instance
-
-    stats.update!(
-      current_uploads: [
-        stats.current_uploads - count,
-        0
-      ].max,
-
-      current_size: [
-        stats.current_size - byte_size,
-        0
-      ].max
+    update_counters(instance.id,
+      current_uploads: -count,
+      current_size: -byte_size
     )
   end
 
