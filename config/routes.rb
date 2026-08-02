@@ -11,7 +11,9 @@ Rails.application.routes.draw do
       delete :destroy_koppu
     end
   end
-  get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu
-  get "/d/:share_key",        to: "share#download_koppurai", as: :download_koppurai
-  get "/:share_key",          to: "share#index",             as: :share
+  share_key_format = /[A-Za-z0-9_-]{14}/
+  get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu, constraints: { share_key: share_key_format }
+  get "/:share_key",          to: "share#index",             as: :share,          constraints: { share_key: share_key_format }
+  # todo: implement zip download for folder
+  # get "/d/:share_key",        to: "share#download_koppurai", as: :download_koppurai
 end
