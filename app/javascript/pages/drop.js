@@ -94,6 +94,25 @@ document.addEventListener('change', (e) => {
   el.value = null
 })
 
+function ensureDrawer() {
+  let drawer = document.getElementById('drawer-folders')
+  if (drawer) return drawer
+
+  drawer = document.createElement('aside')
+  drawer.className = 'drawer'
+  drawer.id = 'drawer-folders'
+  drawer.innerHTML = '<h3 class="heading-xs">Share Files</h3>'
+
+  const statsEl = document.querySelector('.stats')
+  if (statsEl) {
+    statsEl.replaceWith(drawer)
+  } else {
+    document.querySelector('.main').insertAdjacentElement('afterend', drawer)
+  }
+
+  return drawer
+}
+
 async function createFolder(files){
   const token = document.querySelector('meta[name="csrf-token"]').content
 
@@ -116,11 +135,11 @@ async function createFolder(files){
   const temp = document.createElement('div')
   temp.innerHTML = html
   const folderEl = temp.firstElementChild
-  const drawer = document.getElementById('drawer-folders') || document.querySelector('.drawer')
+  const drawer = ensureDrawer()
   if (drawer && folderEl) {
-    const firstChild = drawer.firstElementChild
-    if (firstChild) {
-      drawer.insertBefore(folderEl, firstChild)
+    const existingFolder = drawer.querySelector('.folder')
+    if (existingFolder) {
+      drawer.insertBefore(folderEl, existingFolder)
     } else {
       drawer.appendChild(folderEl)
     }
