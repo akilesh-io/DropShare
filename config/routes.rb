@@ -5,12 +5,13 @@ Rails.application.routes.draw do
   mount MissionControl::Jobs::Engine, at: "/jobs"
 
   root "drop#index"
-  resources :drop, only: [:index, :new, :create] do
+  resources :drop, only: [:index,  :create] do
     member do
       delete :destroy_koppurai
       delete :destroy_koppu
     end
   end
+  post "/drop/new", to: "drop#new", as: :new_drop
   share_key_format = /[A-Za-z0-9_-]{14}/
   get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu, constraints: { share_key: share_key_format }
   get "/:share_key",          to: "share#index",             as: :share,          constraints: { share_key: share_key_format }
