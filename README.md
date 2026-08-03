@@ -1,6 +1,5 @@
 # Drop Share README
 
-
 ## Thanks to:
 
 *File icons:*
@@ -22,24 +21,18 @@ ruby -v 4.0.1
 rails -v 8.1.3
 
 * System dependencies
-
   libvips v8.6+
   ffmpeg v3.4+
   poppler
 
-* Configuration
-
-* Services (job queues, cache servers, search engines, etc.)
-
 * Deployment instructions
 ```bash
-
-```kamal deplou --no-cache
+kamal deplou --no-cache
+```
 
 * Primary colour
 #000F89 - https://en.wikipedia.org/wiki/Copper_phthalocyanine
 #0E1012 - https://akilesh.in
-
 
 ## CSS
 
@@ -50,9 +43,7 @@ layout/ → structure (grid, flex, drawer)
 components/ → reusable UI pieces
 pages/ → page-specific tweaks
 
-
 Naming convention class-based styling 
-
 
 ## Javascript
 *SSR in Rails*
@@ -84,7 +75,7 @@ Rails.logger.info ("DEBUG :::: #{file_size}")
 **View Jobs**
 https://github.com/rails/mission_control-jobs
 
-### Delte all records and asserts
+### Delete all records and asserts
 
 **In production**
 ```ruby
