@@ -1,6 +1,8 @@
 class ShareController < ApplicationController
   include ActionController::Live
 
+  TEXT_PREVIEW_BYTES = 256.kilobytes
+
   before_action :set_koppurai, only: [:index, :download_folder]
   before_action :ensure_not_expired, only: [:index, :download_folder]
 
@@ -16,6 +18,19 @@ class ShareController < ApplicationController
     Stat.instance.increment!(:total_downloads)
 
     redirect_to rails_blob_url(koppu.koppu, disposition: "attachment")
+  rescue ActiveRecord::RecordNotFound
+    render plain: "Page not found or link expired", status: :not_found
+  end
+
+  def text_preview
+    koppu = Koppu.find_by!(share_key: params[:share_key])
+    return render plain: "Expired", status: :gone if koppu.koppurai.expired?
+
+    blob = koppu.koppu.blob
+    return render plain: "Preview not available", status: :unsupported_media_type unless helpers.text_previewable?(blob)
+
+    response.set_header("X-Preview-Truncated", "1") if blob.byte_size > TEXT_PREVIEW_BYTES
+    render plain: text_head(blob), content_type: "text/plain"
   rescue ActiveRecord::RecordNotFound
     render plain: "Page not found or link expired", status: :not_found
   end
@@ -47,6 +62,11 @@ class ShareController < ApplicationController
 
   def ensure_not_expired
     render plain: "Expired", status: :gone if @koppurai&.expired?
+  end
+
+  def text_head(blob)
+    bytes = +(blob.service.download_chunk(blob.key, 0...TEXT_PREVIEW_BYTES) || "")
+    bytes.force_encoding(Encoding::UTF_8).scrub("�").delete_prefix("﻿")
   end
 
   # Streams every attachment into the archive, chunk by chunk, so a folder

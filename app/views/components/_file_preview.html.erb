@@ -1,5 +1,13 @@
 <% if koppu.koppu.attached? %>
-  <% if koppu.koppu.video? %>
+  <% if text_previewable?(koppu.koppu.blob) %>
+    <button type="button" class="text-preview-item"
+            data-preview="<%= text_preview_path(share_key: koppu.share_key) %>"
+            data-filename="<%= koppu.koppu.filename %>"
+            data-download="<%= download_koppu_path(share_key: koppu.share_key) %>">
+      <%= image_tag attachment_icon(koppu.koppu.blob), alt: "Preview file" %>
+    </button>
+
+  <% elsif koppu.koppu.video? %>
     <video controls muted playsinline preload="metadata" class="video-preview">
       <source src="<%= url_for(koppu.koppu) %>" type="<%= koppu.koppu.content_type %>">
     </video>
@@ -7,7 +15,7 @@
   <% elsif koppu.koppu.representable? %>
     <!-- todo: for addmin show loq quality for user show high quilty -->
     <%#= image_tag koppu.koppu.representation(resize_to_limit: [200, 200]) %>
-    <a href="<%= lightbox_url(koppu.koppu) %>" class="lightbox-item" data-filename="<%= koppu.koppu.filename %>" target="_blank">
+    <a href="<%= lightbox_url(koppu.koppu) %>" class="lightbox-item" data-filename="<%= koppu.koppu.filename %>" data-download="<%= download_koppu_path(share_key: koppu.share_key) %>" target="_blank">
       <%= image_tag cached_preview_url(koppu.koppu.representation(resize_to_limit: [1200, 1200], saver: { quality: 95 })) %>
     </a>
 

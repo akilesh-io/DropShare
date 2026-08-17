@@ -1,0 +1,132 @@
+.text-preview-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Reader */
+.text-preview-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.85);
+  box-sizing: border-box;
+}
+
+.text-preview-overlay.open {
+  display: flex;
+}
+
+.text-preview-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(900px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gray-6);
+  border-radius: 8px;
+  background: var(--gray-1);
+}
+
+.text-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--gray-5);
+  background: var(--gray-2);
+}
+
+.text-preview-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--font-size-14);
+  color: var(--text-heading);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-preview-download,
+.text-preview-close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--light);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.text-preview-close {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.text-preview-download:hover,
+.text-preview-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Long lines scroll sideways rather than wrapping, so indented code stays
+   readable; the panel itself never grows past the viewport. */
+.text-preview-body {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--font-size-12);
+  line-height: 1.6;
+  color: var(--text-primary);
+  tab-size: 2;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+}
+
+.text-preview-body.placeholder {
+  color: var(--text-muted);
+  white-space: pre-wrap;
+}
+
+.text-preview-note {
+  padding: 8px 16px;
+  border-top: 1px solid var(--gray-5);
+  font-size: var(--font-size-12);
+  color: var(--text-muted);
+}
+
+body.text-preview-locked {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .text-preview-overlay {
+    padding: 0;
+  }
+
+  .text-preview-panel {
+    height: 100%;
+    max-height: 100%;
+    border: none;
+    border-radius: 0;
+  }
+}
