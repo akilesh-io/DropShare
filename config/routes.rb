@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   post "/drop/new", to: "drop#new", as: :new_drop
   share_key_format = /[A-Za-z0-9_-]{14}/
   get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu, constraints: { share_key: share_key_format }
+  get "/d/:share_key",        to: "share#download_folder", as: :download_folder, constraints: { share_key: share_key_format }
   get "/:share_key",          to: "share#index",             as: :share,          constraints: { share_key: share_key_format }
-  # todo: implement zip download for folder
-  # get "/d/:share_key",        to: "share#download_koppurai", as: :download_koppurai
 end

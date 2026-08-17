@@ -1,4 +1,4 @@
-<div class="folder" data-folder-id="<%= koppurai.id %>" data-download-urls="<%= koppurai.koppus.map { |k| download_koppu_path(share_key: k.share_key) }.to_json %>">
+<div class="folder" data-folder-id="<%= koppurai.id %>">
   <div class="folder-title">
     <div class="folder-meta">
       <div>Expires in <%= time_ago_in_words(koppurai.expires_at) %></div>
@@ -32,9 +32,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
         <% end %>
       <% else %>
-        <button type="button" class="icon-btn download-all-btn">
+        <%= link_to download_folder_path(share_key: koppurai.share_key), class: "icon-btn download-all-btn", data: { turbo: false } do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10L12 15 17 10"></path><path d="M12 15L12 3"></path></g></svg>
-        </button>
+        <% end %>
       <% end %>
     </div>
   </div>
