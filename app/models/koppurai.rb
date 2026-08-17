@@ -11,7 +11,7 @@ class Koppurai < ApplicationRecord
   private
 
   def generate_share_key
-    self.share_key = SecureRandom.urlsafe_base64(10)
+    self.share_key = SecureRandom.urlsafe_base64(4)
     self.downloads_count ||= 0
     self.total_size ||= 0
   end
