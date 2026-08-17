@@ -1,11 +1,27 @@
 .lightbox-overlay {
+  /* Driven from JS while a swipe-to-dismiss drag is in flight. */
+  --lightbox-dim: 0.92;
+  --lightbox-chrome: 1;
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, var(--lightbox-dim));
   z-index: 1000;
   align-items: center;
   justify-content: center;
+  touch-action: none;
+  transition: background 0.2s ease;
+}
+
+/* While a finger is down, everything tracks the drag frame-for-frame. */
+.lightbox-overlay.dragging,
+.lightbox-overlay.dragging .lightbox-image,
+.lightbox-overlay.dragging .lightbox-caption,
+.lightbox-overlay.dragging .lightbox-close,
+.lightbox-overlay.dragging .lightbox-download,
+.lightbox-overlay.dragging .lightbox-prev,
+.lightbox-overlay.dragging .lightbox-next {
+  transition: none;
 }
 
 .lightbox-overlay.open {
@@ -28,7 +44,10 @@
   object-fit: contain;
   opacity: 0;
   border-radius: 4px;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.2s ease;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .lightbox-image.loaded {
@@ -43,9 +62,12 @@
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
   font-size: 13px;
+  opacity: var(--lightbox-chrome);
+  transition: opacity 0.2s ease;
 }
 
 .lightbox-close,
+.lightbox-download,
 .lightbox-prev,
 .lightbox-next {
   position: absolute;
@@ -57,10 +79,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease;
+  opacity: var(--lightbox-chrome);
+  transition: background 0.15s ease, opacity 0.2s ease;
 }
 
 .lightbox-close:hover,
+.lightbox-download:hover,
 .lightbox-prev:hover,
 .lightbox-next:hover {
   background: rgba(255, 255, 255, 0.2);
@@ -73,6 +97,14 @@
   height: 40px;
   font-size: 24px;
   line-height: 1;
+}
+
+.lightbox-download {
+  top: 16px;
+  right: 64px;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
 }
 
 .lightbox-prev,
