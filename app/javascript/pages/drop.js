@@ -164,10 +164,68 @@ function uploadFilesToFolder(files, koppuraiId, token) {
   return Promise.all(uploads)
 }
 
+// UPLOAD PROGRESS CARD
+const RING = 2 * Math.PI * 48
+const RING_LABELS = { processing: 'Saving', error: 'Failed' }
+
+function humanFileSize(bytes) {
+  if (!Number.isFinite(bytes)) return ""
+
+  const units = ["Bytes", "KB", "MB", "GB", "TB"]
+  let size = bytes, unit = 0
+  while (size >= 1024 && unit < units.length - 1) { size /= 1024; unit += 1 }
+
+  return `${unit === 0 ? size : size.toFixed(1)} ${units[unit]}`
+}
+
+function createUploadCard(file, koppuraiId) {
+  const target = document.getElementById(`folder-${koppuraiId}-files`)
+  if (!target) return null
+
+  const card = document.createElement('div')
+  card.className = 'file file-uploading'
+  card.title = file.name
+  card.innerHTML = `
+    <div class="file-preview">
+      <div class="upload-progress">
+        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="progress-ring-bg" cx="60" cy="60" r="48"></circle>
+          <circle class="progress-ring-bar" cx="60" cy="60" r="48"></circle>
+        </svg>
+        <span class="progress-label" role="progressbar" aria-valuemin="0" aria-valuemax="100"></span>
+      </div>
+    </div>
+    <div class="file-meta"><p class="text-xs"></p><p class="text-xs"></p></div>`
+
+  const [nameEl, sizeEl] = card.querySelectorAll('.file-meta p')
+  nameEl.textContent = file.name
+  sizeEl.textContent = humanFileSize(file.size)
+
+  target.insertBefore(card, target.querySelector('.add-file-btn')) // null anchor appends
+  setCardState(card, 'uploading', 0)
+  return card
+}
+
+// uploading: arc fills to percent · processing: quarter arc, spun by CSS · error: full red ring
+function setCardState(card, state, percent = 100) {
+  if (!card) return
+
+  const bar = card.querySelector('.progress-ring-bar')
+  const label = card.querySelector('.progress-label')
+  const value = Math.round(Math.max(0, Math.min(100, percent)))
+
+  card.dataset.uploadState = state
+  bar.style.strokeDasharray = state === 'processing' ? `${RING * 0.25} ${RING}` : RING
+  bar.style.strokeDashoffset = state === 'uploading' ? RING * (1 - value / 100) : 0
+  label.textContent = RING_LABELS[state] || `${value}%`
+  if (state === 'uploading') label.setAttribute('aria-valuenow', value)
+}
+
 // UPLOAD FUNCTION
 function uploadFile(file, koppuraiId, token) {
   const url = mainInput ? mainInput.dataset.directUploadUrl : null
   if (!url) return Promise.reject(new Error('Direct upload URL not found'))
+  const card = createUploadCard(file, koppuraiId)
 
   return new Promise((resolve, reject) => {
     const upload = new DirectUpload(file, url, {
@@ -175,7 +233,7 @@ function uploadFile(file, koppuraiId, token) {
         xhr.upload.addEventListener("progress", (event) => {
           if (!event.lengthComputable) return
           const progress = (event.loaded / event.total) * 100
-          console.log(file.name, "Upload:", progress.toFixed(2) + "%")
+          setCardState(card, 'uploading', progress)
         })
       }
     })
@@ -183,8 +241,11 @@ function uploadFile(file, koppuraiId, token) {
     upload.create((error, blob) => {
       if (error) {
         console.error('Direct upload error for', file.name, error)
+        setCardState(card, 'error')
         return reject(error)
       }
+
+      setCardState(card, 'processing')
 
       fetch("/drop", {
         method: "POST",
@@ -205,19 +266,18 @@ function uploadFile(file, koppuraiId, token) {
         return res.text()
       })
       .then(html => {
-        const target = document.getElementById(`folder-${koppuraiId}-files`)
-        const addBtn = target ? target.querySelector('.add-file-btn') : null
-        if (target && html.trim()) {
-          if (addBtn) {
-            addBtn.insertAdjacentHTML('beforebegin', html)
-          } else {
-            target.insertAdjacentHTML('beforeend', html)
-          }
-        }
+        // swap the progress card for the rendered file, keeping its position
+        const anchor = card && card.isConnected
+          ? card
+          : document.querySelector(`#folder-${koppuraiId}-files .add-file-btn`)
+
+        if (html.trim() && anchor) anchor.insertAdjacentHTML('beforebegin', html)
+        if (card) card.remove()
         resolve({ ok: true })
       })
       .catch(err => {
         console.error('Server error for', file.name, err)
+        setCardState(card, 'error')
         reject(err)
       })
     })
