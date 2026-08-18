@@ -7,6 +7,8 @@ https://www.untitledui.com/resources/file-icons
 https://www.figma.com/community/file/1113398399853613530/40-file-type-file-extension-icon
 https://github.com/dmhendricks/file-icon-vectors
 
+*File upload protocol* 
+https://tus.io/protocols/resumable-upload
 
 https://oneuptime.com/blog/post/2026-01-27-rails-activestorage-file-uploads/view
 https://youtu.be/wFUy120Fts8
@@ -99,3 +101,8 @@ ActiveStorage::Blob.delete_all
 Koppu.delete_all
 Koppurai.delete_all
 ```
+
+
+#### TODO: 
+[x] Text file read/preview in browser
+
