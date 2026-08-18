@@ -118,6 +118,13 @@
   gap: 12px;
 }
 
+@media (max-width: 640px) {
+  .file-group {
+     justify-content: center;
+       gap: 16px 24px;
+   }
+}
+
 .file {
   min-height: 150px;
   width: 8rem;
