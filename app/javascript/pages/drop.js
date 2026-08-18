@@ -1,7 +1,4 @@
-import * as ActiveStorage from "@rails/activestorage"
-import { DirectUpload } from "@rails/activestorage"
-
-ActiveStorage.start()
+import { TusUpload } from "components/tus_upload"
 
 const dz = document.querySelector("[data-dropzone]")
 const mainInput = document.getElementById("koppu")
@@ -222,66 +219,53 @@ function setCardState(card, state, percent = 100) {
 }
 
 // UPLOAD FUNCTION
-function uploadFile(file, koppuraiId, token) {
-  const url = mainInput ? mainInput.dataset.directUploadUrl : null
-  if (!url) return Promise.reject(new Error('Direct upload URL not found'))
+async function uploadFile(file, koppuraiId, token) {
   const card = createUploadCard(file, koppuraiId)
 
-  return new Promise((resolve, reject) => {
-    const upload = new DirectUpload(file, url, {
-      directUploadWillStoreFileWithXHR: (xhr) => {
-        xhr.upload.addEventListener("progress", (event) => {
-          if (!event.lengthComputable) return
-          const progress = (event.loaded / event.total) * 100
-          setCardState(card, 'uploading', progress)
-        })
-      }
-    })
-
-    upload.create((error, blob) => {
-      if (error) {
-        console.error('Direct upload error for', file.name, error)
-        setCardState(card, 'error')
-        return reject(error)
-      }
-
-      setCardState(card, 'processing')
-
-      fetch("/drop", {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          blob_signed_id: blob.signed_id,
-          koppurai_id: koppuraiId
-        })
-      })
-      .then(async (res) => {
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}))
-          throw new Error(data.error || `Upload failed (${res.status})`)
-        }
-        return res.text()
-      })
-      .then(html => {
-        // swap the progress card for the rendered file, keeping its position
-        const anchor = card && card.isConnected
-          ? card
-          : document.querySelector(`#folder-${koppuraiId}-files .add-file-btn`)
-
-        if (html.trim() && anchor) anchor.insertAdjacentHTML('beforebegin', html)
-        if (card) card.remove()
-        resolve({ ok: true })
-      })
-      .catch(err => {
-        console.error('Server error for', file.name, err)
-        setCardState(card, 'error')
-        reject(err)
-      })
-    })
+  const upload = new TusUpload(file, {
+    headers: { "X-CSRF-Token": token },
+    onProgress: ({ loaded, total }) => setCardState(card, 'uploading', (loaded / total) * 100)
   })
+
+  try {
+    const { signedId } = await upload.start()
+
+    setCardState(card, 'processing')
+    swapCardForFile(card, await attachToFolder(signedId, koppuraiId, token), koppuraiId)
+
+    return { ok: true }
+  } catch (error) {
+    console.error('Upload failed for', file.name, error)
+    setCardState(card, 'error')
+    if (card) card.title = `${file.name} — ${error.message}`
+    throw error
+  }
+}
+
+// Hands the finished blob to the folder, which renders the file back to us.
+async function attachToFolder(signedId, koppuraiId, token) {
+  const res = await fetch("/drop", {
+    method: "POST",
+    headers: { "X-CSRF-Token": token, "Content-Type": "application/json" },
+    body: JSON.stringify({ blob_signed_id: signedId, koppurai_id: koppuraiId })
+  })
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || `Upload failed (${res.status})`)
+  }
+
+  return res.text()
+}
+
+// Swap the progress card for the rendered file, keeping its position.
+function swapCardForFile(card, html, koppuraiId) {
+  const anchor = card && card.isConnected
+    ? card
+    : document.querySelector(`#folder-${koppuraiId}-files .add-file-btn`)
+
+  if (html.trim() && anchor) anchor.insertAdjacentHTML('beforebegin', html)
+  if (card) card.remove()
 }
 
 // COPY BUTTON

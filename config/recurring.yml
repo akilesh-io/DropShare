@@ -16,3 +16,6 @@ production:
   cleanup_expired_koppurais:
     class: CleanupExpiredKoppuraisJob
     schedule: every hour
+  purge_expired_tus_uploads:
+    command: "Tus.purge_expired"
+    schedule: every hour at minute 25

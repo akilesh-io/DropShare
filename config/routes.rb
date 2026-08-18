@@ -12,6 +12,13 @@ Rails.application.routes.draw do
     end
   end
   post "/drop/new", to: "drop#new", as: :new_drop
+
+  # Resumable uploads, over the tus protocol: https://tus.io
+  post    "/tus"        => "tus_uploads#create",  as: :tus_uploads
+  get     "/tus/:token" => "tus_uploads#show",    as: :tus_upload
+  patch   "/tus/:token" => "tus_uploads#update"
+  delete  "/tus/:token" => "tus_uploads#destroy"
+  match   "/tus(/:token)" => "tus_uploads#protocol_options", via: :options
   share_key_format = /[A-Za-z0-9_-]{4,14}/
   get "/f/:share_key",        to: "share#download_koppu",    as: :download_koppu, constraints: { share_key: share_key_format }
   get "/t/:share_key",        to: "share#text_preview",     as: :text_preview,  constraints: { share_key: share_key_format }
