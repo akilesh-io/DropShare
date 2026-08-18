@@ -54,6 +54,11 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
+  # https://github.com/rails/mission_control-jobs#authentication
+  # Set via `bin/rails credentials:edit`: mission_control: { username: ..., password: ... }
+  MissionControl::Jobs.http_basic_auth_user = Rails.application.credentials.dig(:mission_control, :username)
+  MissionControl::Jobs.http_basic_auth_password = Rails.application.credentials.dig(:mission_control, :password)
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
