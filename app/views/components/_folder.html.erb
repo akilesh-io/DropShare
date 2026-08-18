@@ -3,6 +3,8 @@
     <div class="folder-meta">
       <div>Expires in <%= time_ago_in_words(koppurai.expires_at) %></div>
       <span>&#x2022;</span>
+      <div><%= pluralize(koppurai.koppus.size, "file") %></div>
+      <span>&#x2022;</span>
       <div><%= number_to_human_size(koppurai.total_size) %></div>
       <span>&#x2022;</span>
       <% if local_assigns[:is_owner] %>
