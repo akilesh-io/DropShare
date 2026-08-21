@@ -73,7 +73,11 @@ export class TusUpload {
       await this.attemptChunk()
     }
 
-    await this.ensureSignedId()
+    while (!this.signedId) {
+      if (this.aborted) throw new Error("Upload aborted")
+      await this.attemptSignedId()
+    }
+
     this.forget()
 
     return { signedId: this.signedId, uploadUrl: this.uploadUrl }
@@ -165,22 +169,37 @@ export class TusUpload {
     }
   }
 
-  // Spends one rung of the backoff ladder, then asks where the server actually got to,
-  // since a failed chunk says nothing about how much of it landed. A resync that fails the
-  // same way isn't fatal either: the offset stays put and the next attempt asks again. Only
-  // an error out of rungs, or not worth another go, reaches the caller.
-  async retryAfter(error) {
-    const delay = this.retryDelays[this.attempt]
-    if (delay === undefined || !this.worthRetrying(error)) throw error
+  // Every byte is on the server and only the blob is missing, which is worth asking about
+  // again: a server too busy to finish a large file now may well manage a moment later.
+  async attemptSignedId() {
+    try {
+      await this.ensureSignedId()
+    } catch (error) {
+      await this.backOff(error)
+    }
+  }
 
-    this.attempt++
-    await wait(delay)
+  // Spends one rung of the ladder, then asks where the server actually got to, since a
+  // failed chunk says nothing about how much of it landed. A resync that fails the same way
+  // isn't fatal either: the offset stays put and the next attempt asks again.
+  async retryAfter(error) {
+    await this.backOff(error)
 
     try {
       await this.resync()
     } catch (resyncError) {
       if (!this.worthRetrying(resyncError)) throw resyncError
     }
+  }
+
+  // Waits out one rung of the backoff ladder. An error not worth another go, or one that
+  // arrives with no rungs left, is rethrown to the caller instead.
+  async backOff(error) {
+    const delay = this.retryDelays[this.attempt]
+    if (delay === undefined || !this.worthRetrying(error)) throw error
+
+    this.attempt++
+    await wait(delay)
   }
 
   worthRetrying(error) {

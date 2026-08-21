@@ -107,14 +107,9 @@ class Tus::Upload
   def finalize!
     return blob if finalized?
 
-    @blob = open do |file|
-      ActiveStorage::Blob.create_and_upload! io: file, filename: filename, content_type: content_type,
-        identify: content_type.blank?
-    end
-
+    @blob = movable? ? move_into_storage : upload_into_storage
     self.blob_id = @blob.id
     save
-    FileUtils.rm_f data_path
 
     @blob
   end
@@ -192,6 +187,55 @@ class Tus::Upload
     end
 
   private
+    def movable?
+      ActiveStorage::Blob.service.is_a?(ActiveStorage::Service::DiskService)
+    end
+
+    # The disk service keeps its files on the volume the chunks were staged on, so the
+    # finished upload is moved into the blob's place rather than streamed into it: one pass
+    # to checksum it and a rename, instead of a read and a write whose cost grows with the
+    # file. For a few gigabytes that is the difference between seconds and minutes, and the
+    # request has to answer before the proxy in front of it gives up.
+    def move_into_storage
+      blob = ActiveStorage::Blob.create_before_direct_upload!(
+        filename: filename, byte_size: length, checksum: staged_checksum, content_type: content_type)
+
+      destination = blob.service.path_for(blob.key)
+      FileUtils.mkdir_p File.dirname(destination)
+      FileUtils.mv data_path, destination
+
+      # Sniffing the first bytes only works once the file is in place, and is only wanted
+      # when the client didn't tell us the type -- the way identify: false means below.
+      content_type.present? ? blob.update!(identified: true) : blob.identify
+
+      blob
+    end
+
+    # Every other service has to be handed the bytes.
+    def upload_into_storage
+      blob = open do |file|
+        ActiveStorage::Blob.create_and_upload! io: file, filename: filename, content_type: content_type,
+          identify: content_type.blank?
+      end
+
+      FileUtils.rm_f data_path
+      blob
+    end
+
+    # The MD5 Active Storage stores for a blob, computed the way it computes it.
+    def staged_checksum
+      digest = OpenSSL::Digest::MD5.new
+      buffer = "".b
+
+      open do |file|
+        while chunk = file.read(BUFFER_SIZE, buffer)
+          digest << chunk
+        end
+      end
+
+      digest.base64digest
+    end
+
     # Stops at the first failed read: a connection that drops mid-chunk still leaves behind
     # the bytes that did arrive, which is the entire point of the protocol.
     def each_chunk(io)
