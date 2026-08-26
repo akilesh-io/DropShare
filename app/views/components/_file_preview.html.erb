@@ -7,6 +7,13 @@
       <%= image_tag attachment_icon(koppu.koppu.blob), alt: "Preview file" %>
     </button>
 
+  <% elsif koppu.koppu.blob.byte_size > 100.megabytes %>
+  <%# todo: move both no-preview into a single partial %>
+    <div class="no-preview">
+      <%= link_to download_koppu_path(share_key: koppu.share_key) do %>
+        <%= image_tag attachment_icon(koppu.koppu.blob) , alt: "Download #{koppu.koppu.filename}" %>
+      <% end %>
+    </div>
   <% elsif koppu.koppu.video? %>
     <video controls muted playsinline preload="metadata" class="video-preview">
       <source src="<%= url_for(koppu.koppu) %>" type="<%= koppu.koppu.content_type %>">
@@ -43,7 +50,7 @@
   <% else %>
     <div class="no-preview">
       <%= link_to download_koppu_path(share_key: koppu.share_key) do %>
-        <%= image_tag attachment_icon(koppu.koppu.blob) , alt: "Download file" %>
+        <%= image_tag attachment_icon(koppu.koppu.blob) , alt: "Download #{koppu.koppu.filename}" %>
       <% end %>
     </div>
   <% end %>
