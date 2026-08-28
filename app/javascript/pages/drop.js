@@ -14,8 +14,10 @@ if (dz && mainInput) {
     e.preventDefault()
     createFolder(e.dataTransfer.files)
   })
-  mainInput.addEventListener('change', (e) => {
-    createFolder(mainInput.files)
+  mainInput.addEventListener('change', () => {
+    const files = Array.from(mainInput.files)
+    mainInput.value = null
+    createFolder(files)
   })
 }
 
@@ -66,9 +68,35 @@ document.addEventListener("drop", (event) => {
 })
 
 // prevent browser opening file on any drag/drop outside targets
-;["dragenter", "dragleave"].forEach(event => {
+;["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
   document.addEventListener(event, (e) => e.preventDefault())
 })
+
+// PASTE TO UPLOAD
+document.addEventListener("paste", (event) => {
+  if (event.target.closest?.("input, textarea, [contenteditable]")) return
+
+  const files = clipboardFiles(event.clipboardData)
+  if (!files.length) return
+
+  event.preventDefault()
+  createFolder(files)
+})
+
+function clipboardFiles(clipboardData) {
+  if (!clipboardData) return []
+
+  const files = [
+    ...Array.from(clipboardData.files || []),
+    ...Array.from(clipboardData.items || [])
+      .filter(item => item.kind === "file")
+      .map(item => item.getAsFile())
+      .filter(Boolean)
+  ]
+
+  const unique = new Map(files.map(file => [`${file.name}:${file.size}:${file.lastModified}`, file]))
+  return [...unique.values()]
+}
 
 // Click handler for per-folder add buttons
 document.addEventListener('click', (e) => {
