@@ -58,6 +58,7 @@
   white-space: nowrap;
 }
 
+.text-preview-copy,
 .text-preview-download,
 .text-preview-close {
   display: flex;
@@ -80,9 +81,20 @@
   line-height: 1;
 }
 
+.text-preview-copy:hover,
 .text-preview-download:hover,
 .text-preview-close:hover {
   background: rgba(255, 255, 255, 0.18);
+}
+
+/* The check replaces the copy icon for a moment after a successful copy. */
+.text-preview-copy .icon-copied,
+.text-preview-copy.copied .icon-copy {
+  display: none;
+}
+
+.text-preview-copy.copied .icon-copied {
+  display: block;
 }
 
 /* Long lines scroll sideways rather than wrapping, so indented code stays
