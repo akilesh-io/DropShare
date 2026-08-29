@@ -44,6 +44,9 @@ gem "image_processing", "~> 1.2"
 # Build ZIP archives for folder downloads [https://github.com/rubyzip/rubyzip]
 gem 'rubyzip', require: 'zip'
 
+# Render share links as QR codes [https://github.com/whomwah/rqrcode]
+gem "rqrcode"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

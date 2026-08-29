@@ -28,6 +28,18 @@
           Copy
         </button>
       </div>
+
+      <button type="button" class="icon-btn" popovertarget="qr-<%= koppurai.id %>" title="Show QR code" aria-label="Show QR code">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v3M14 21h3M20 20h1"/></svg>
+      </button>
+
+      <div id="qr-<%= koppurai.id %>" class="qr-popover" popover>
+        <% qr = RQRCode::QRCode.new(share_url(koppurai.share_key)) %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 <%= qr.qrcode.module_count + 8 %> <%= qr.qrcode.module_count + 8 %>"
+             role="img" aria-label="QR code for <%= share_url(koppurai.share_key) %>" shape-rendering="crispEdges">
+          <%= raw qr.as_svg(module_size: 1, offset: 4, use_path: true, standalone: false, color: "0e1012", fill: "ffffff") %>
+        </svg>
+      </div>
       <% if local_assigns[:is_owner] %>
         <%= button_to destroy_koppurai_drop_path(koppurai), method: :delete, class: "icon-btn",
                 form: { data: { turbo_confirm: "Delete this folder?" } } do %>

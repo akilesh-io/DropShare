@@ -1,0 +1,23 @@
+.qr-popover {
+  display: none;
+  margin: auto;
+
+  padding: 1rem;
+  max-width: min(92vw, 300px);
+  border-radius: 4px;
+
+  background: var(--gray-2);
+  text-align: center;
+}
+
+.qr-popover:popover-open {
+  display: block;
+}
+
+.qr-popover::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.qr-popover svg {
+  width: 100%;
+}
