@@ -27,6 +27,15 @@ class ShareControllerTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?]", destroy_koppurai_drop_path(koppurai), count: 0
   end
 
+  test "the link is offered as a QR code, drawn into the page rather than fetched from anywhere" do
+    koppurai = create_koppurai
+
+    get share_path(koppurai.share_key)
+
+    assert_select "#qr-#{koppurai.id}[popover] svg[aria-label=?]",
+      "QR code for #{share_url(koppurai.share_key)}"
+  end
+
   test "a folder nobody shared is not found" do
     get share_path(UNKNOWN_KEY)
 
