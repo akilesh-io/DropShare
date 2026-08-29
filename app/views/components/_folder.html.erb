@@ -6,8 +6,8 @@
       <div><%= pluralize(koppurai.koppus.size, "file") %></div>
       <span>&#x2022;</span>
       <div><%= number_to_human_size(koppurai.total_size) %></div>
-      <span>&#x2022;</span>
       <% if local_assigns[:is_owner] %>
+      <span>&#x2022;</span>
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
