@@ -226,6 +226,7 @@
   width: 320px;
   max-width: 45vw;
   padding: 0.5rem 0.9rem;
+  height: 42px;
 
   border: 1px solid var(--gray-6);
   border-radius: 6px 0px 0px 16px;
@@ -240,12 +241,11 @@
   outline: none;
   border-color: var(--accent-9);
 }
+
 .copy-btn {
-  white-space: nowrap;
-  padding: 0.5rem 0.9rem;
-  border: none;
   border-radius: 0px 6px 6px 0px;
 }
+
 .folder-actions {
   display: flex;
   align-items: center;
@@ -266,11 +266,6 @@
 
   .folder-link {
     flex: 1;
-  }
-
-  .folder-link input {
-    width: 100%;
-    max-width: 100%;
   }
 }
 
