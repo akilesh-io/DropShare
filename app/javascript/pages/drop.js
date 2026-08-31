@@ -312,3 +312,10 @@ document.addEventListener("click", async (e) => {
     `
   }, 1000)
 })
+
+
+// Scroll link to right
+document.querySelectorAll(".share-url").forEach((input) => {
+  input.scrollLeft = input.scrollWidth
+})
+
