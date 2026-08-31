@@ -20,6 +20,7 @@ class ShareController < ApplicationController
     redirect_to rails_blob_url(koppu.koppu, disposition: "attachment")
   rescue ActiveRecord::RecordNotFound
     render plain: "Page not found or link expired", status: :not_found
+    # redirect_to root_path, alert: "Page not found or link expired"
   end
 
   def text_preview
@@ -31,8 +32,6 @@ class ShareController < ApplicationController
 
     response.set_header("X-Preview-Truncated", "1") if blob.byte_size > TEXT_PREVIEW_BYTES
     render plain: text_head(blob), content_type: "text/plain"
-  rescue ActiveRecord::RecordNotFound
-    render plain: "Page not found or link expired", status: :not_found
   end
 
   def download_folder
@@ -57,7 +56,7 @@ class ShareController < ApplicationController
     @koppurai = Koppurai
       .includes(koppus: [koppu_attachment: :blob])
       .find_by(share_key: params[:share_key])
-    render plain: "Page not found or link expired", status: :not_found if @koppurai.nil?
+    redirect_to root_path, alert: "Page not found or link expired" if @koppurai.nil?
   end
 
   def ensure_not_expired
