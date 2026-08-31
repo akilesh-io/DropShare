@@ -68,6 +68,7 @@ bin/rails generate model Koppurai koppu:attachment
 * Paste files to upload
 * Toaster and file progress
 * Direct upload & large file upload
+* Firefox multiple files copy paste with kyebinding not workin
 
 ## Helper commands
 ```ruby
