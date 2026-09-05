@@ -13,10 +13,13 @@ https://tus.io/protocols/resumable-upload
 https://oneuptime.com/blog/post/2026-01-27-rails-activestorage-file-uploads/view
 https://youtu.be/wFUy120Fts8
 https://avohq.io/blog/rails-s3-direct-uploads
+How QR works : https://www.youtube.com/watch?v=w5ebcowAJD8
 
 ### Application
-![Application Design Structure](public/readme/skeleton.png)
+
 ![Application Preview](public/readme/drop.png)
+
+![Application Design Structure](public/readme/skeleton.png)
 
 * Ruby version
 ruby -v 4.0.1
@@ -46,7 +49,7 @@ components/ → reusable UI pieces
 pages/ → page-specific tweaks
 
 Naming convention class-based styling 
-
+ #00008B
 ## Javascript
 *SSR in Rails*
 ```js
@@ -78,7 +81,7 @@ Rails.logger.info ("DEBUG :::: #{file_size}")
 **View Jobs**
 https://github.com/rails/mission_control-jobs
 
-### Delete all records and asserts
+### Delete all records and asserts (depricated)
 
 **In production**
 ```ruby
