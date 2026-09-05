@@ -32,7 +32,7 @@ rails -v 8.1.3
 
 * Deployment instructions
 ```bash
-kamal deplou --no-cache
+kamal deploy --no-cache
 ```
 
 * Primary colour
@@ -63,21 +63,16 @@ stats
 
 bin/rails generate model Koppurai koppu:attachment
 
-### TODO
-* remove unattached files - https://guides.rubyonrails.org/active_storage_overview.html#purging-unattached-uploads
-* Serve Large files directly - https://writesoftwarewell.com/serving-large-files-rails-nginx-thruster
-* Optimise rails Sqlite - https://fractaledmind.com/2024/04/15/sqlite-on-rails-the-how-and-why-of-optimal-performance/
-* use import map - https://videojs.org/
-* Paste files to upload
-* Toaster and file progress
-* Direct upload & large file upload
-* Firefox multiple files copy paste with kyebinding not workin
-
 ## Helper commands
 ```ruby
 Rails.logger.info ("DEBUG :::: #{file_size}")
 ```
 
+
+Edit or update creadentials (master key requed)
+```bash
+rails credentials:edit
+```
 **View Jobs**
 https://github.com/rails/mission_control-jobs
 
@@ -106,7 +101,13 @@ Koppu.delete_all
 Koppurai.delete_all
 ```
 
-
 #### TODO: 
 [x] Text file read/preview in browser
-
+* remove unattached files - https://guides.rubyonrails.org/active_storage_overview.html#purging-unattached-uploads
+* Serve Large files directly - https://writesoftwarewell.com/serving-large-files-rails-nginx-thruster
+* Optimise rails Sqlite - https://fractaledmind.com/2024/04/15/sqlite-on-rails-the-how-and-why-of-optimal-performance/
+* use import map - https://videojs.org/
+* Paste files to upload
+* Toaster and file progress
+* Direct upload & large file upload
+* Firefox multiple files copy paste with kyebinding not workin
