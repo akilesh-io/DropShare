@@ -64,7 +64,7 @@ document.addEventListener("drop", (event) => {
   const token = document.querySelector('meta[name="csrf-token"]').content
   if (!files || !files.length || !koppuraiId) return
 
-  uploadFilesToFolder(files, koppuraiId, token)
+  uploadFilesInBatches(files, koppuraiId, token).catch(err => console.error('One or more uploads failed', err))
 })
 
 // prevent browser opening file on any drag/drop outside targets
@@ -115,7 +115,7 @@ document.addEventListener('change', (e) => {
   const koppuraiId = el.dataset.koppuraiId
   if (!files || !files.length) return
   const token = document.querySelector('meta[name="csrf-token"]').content
-  uploadFilesToFolder(files, koppuraiId, token)
+  uploadFilesInBatches(files, koppuraiId, token).catch(err => console.error('One or more uploads failed', err))
   el.value = null
 })
 
@@ -176,17 +176,33 @@ async function createFolder(files){
     return
   }
 
-  const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
   try {
-    await Promise.all(uploads)
+    await uploadFilesInBatches(files, koppuraiId, token)
   } catch (err) {
     console.error('One or more uploads failed', err)
   }
 }
 
-function uploadFilesToFolder(files, koppuraiId, token) {
-  const uploads = Array.from(files).map(file => uploadFile(file, koppuraiId, token))
-  return Promise.all(uploads)
+const MAX_CONCURRENT_UPLOADS = 6
+
+async function uploadFilesInBatches(files, koppuraiId, token, limit = MAX_CONCURRENT_UPLOADS) {
+  const queue = Array.from(files)
+  const failures = []
+
+  async function worker() {
+    let file
+    while ((file = queue.shift())) {
+      try {
+        await uploadFile(file, koppuraiId, token)
+      } catch (error) {
+        failures.push(error)
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, queue.length) }, worker))
+
+  if (failures.length) throw failures[0]
 }
 
 // UPLOAD PROGRESS CARD
