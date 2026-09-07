@@ -111,3 +111,9 @@ Koppurai.delete_all
 * Toaster and file progress
 * Direct upload & large file upload
 * Firefox multiple files copy paste with kyebinding not workin
+
+
+#### Stress Test:
+
+<img width="1911" height="1032" alt="image" src="https://github.com/user-attachments/assets/630e0cd8-902d-4b06-97dd-9783ad998b7c" />
+74 file , 900mb
