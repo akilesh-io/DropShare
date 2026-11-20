@@ -127,7 +127,7 @@
 
 .file {
   min-height: 150px;
-  width: 8rem;
+  width: 10rem;
   border-radius: 8px;
   overflow: hidden;
   border: 1.5px solid var(--gray-9);
