@@ -1,3 +1,12 @@
-<h1><%= @koppurai.title || "Shared Files" %></h1>
-<%= render partial: "components/folder", locals: { koppurai: @koppurai , is_owner: false}, layout: false %>
+<nav class="top-nav">
+  <a href="/" class="brand-logo">
+    <img src="/icon.png" alt="Drop Share logo" width="32" height="32">
+    <h3>Drop Share</h3>
+  </a>
+</nav>
+
+<aside class="drawer">
+  <h1 class="heading-xs"><%= @koppurai.title || "Shared Files" %></h1>
+  <%= render partial: "components/folder", locals: { koppurai: @koppurai , is_owner: false}, layout: false %>
+</aside>
 

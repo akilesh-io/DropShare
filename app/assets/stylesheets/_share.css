@@ -1,0 +1,30 @@
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f5f5f5;
+  text-decoration: none;
+  margin: 10px;
+}
+
+.brand-logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.brand-logo h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+}
+
