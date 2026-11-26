@@ -54,8 +54,34 @@
   opacity: 1;
 }
 
+/* Zoom: the image scales and pans from its centre (see lightbox.js). */
+.lightbox-image {
+  cursor: zoom-in;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.lightbox-overlay.zoomed .lightbox-image {
+  cursor: grab;
+}
+
+.lightbox-overlay.panning .lightbox-image {
+  cursor: grabbing;
+}
+
+/* A transformed image gets its own stacking layer; keep the controls above it
+   so a zoomed image can't cover (or swallow taps meant for) them. */
+.lightbox-caption,
+.lightbox-close,
+.lightbox-download,
+.lightbox-prev,
+.lightbox-next {
+  z-index: 1;
+}
+
 .lightbox-caption {
   position: absolute;
+  pointer-events: none;
   bottom: 16px;
   left: 0;
   right: 0;

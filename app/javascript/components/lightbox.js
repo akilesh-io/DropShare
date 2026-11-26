@@ -4,12 +4,24 @@ const CLOSE_DISTANCE = 110
 const FLICK_VELOCITY = 0.4
 const FLICK_DISTANCE = 40
 
+const MAX_SCALE = 4
+const DOUBLE_TAP_SCALE = 2.5
+const DOUBLE_TAP_DELAY = 300
+const DOUBLE_TAP_SLOP = 30
+
 let overlay = null
 let currentItems = []
 let currentIndex = 0
 let touch = null
 let animating = false
 let lastDragEnd = 0
+let lastTap = null
+let lastTouchAt = 0
+let mousePan = null
+let wheelTimer = null
+
+// The image's zoom, as a scale and a pan offset (px) from its resting centre.
+const zoom = { scale: 1, x: 0, y: 0 }
 
 function buildOverlay() {
   const el = document.createElement("div")
@@ -33,6 +45,9 @@ function buildOverlay() {
   el.addEventListener("touchmove", onTouchMove, { passive: false })
   el.addEventListener("touchend", onTouchEnd)
   el.addEventListener("touchcancel", onTouchCancel)
+  el.addEventListener("wheel", onWheel, { passive: false })
+  el.addEventListener("dblclick", onDoubleClick)
+  el.addEventListener("mousedown", onMouseDown)
   document.body.appendChild(el)
   return el
 }
@@ -41,19 +56,76 @@ function image() {
   return overlay.querySelector(".lightbox-image")
 }
 
+function isZoomed() {
+  return zoom.scale > 1.01
+}
+
 // Backdrop darkness and control opacity, both as 0..1 of their resting value.
 function setChrome(dim, chrome) {
   overlay.style.setProperty("--lightbox-dim", (0.92 * dim).toFixed(3))
   overlay.style.setProperty("--lightbox-chrome", chrome.toFixed(3))
 }
 
-// Inline styles are only ever used for dragging and transitions, so wiping
-// them wholesale hands everything back to the stylesheet.
+// Inline styles are only ever used for dragging, zooming and transitions, so
+// wiping them wholesale hands everything back to the stylesheet.
 function resetDrag() {
-  overlay.classList.remove("dragging")
+  overlay.classList.remove("dragging", "zoomed")
   image().style.cssText = ""
   overlay.style.cssText = ""
+  zoom.scale = 1
+  zoom.x = 0
+  zoom.y = 0
 }
+
+// ---- zoom ------------------------------------------------------------------
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
+
+// The image sits centred in the overlay, so the overlay's centre is the
+// transform origin every zoom calculation works from.
+function centre() {
+  return { x: overlay.clientWidth / 2, y: overlay.clientHeight / 2 }
+}
+
+// Keep a zoomed image's edges from pulling in past the screen's edges; an
+// image still smaller than the screen on an axis stays centred on it.
+function clampPan(scale, x, y) {
+  const img = image()
+  const maxX = Math.max(0, (img.offsetWidth * scale - overlay.clientWidth) / 2)
+  const maxY = Math.max(0, (img.offsetHeight * scale - overlay.clientHeight) / 2)
+  return { x: clamp(x, -maxX, maxX), y: clamp(y, -maxY, maxY) }
+}
+
+function setZoom(scale, x, y) {
+  zoom.scale = clamp(scale, 1, MAX_SCALE)
+  const pan = clampPan(zoom.scale, x, y)
+  zoom.x = pan.x
+  zoom.y = pan.y
+
+  overlay.classList.toggle("zoomed", isZoomed())
+  image().style.transform = isZoomed()
+    ? `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.scale})`
+    : ""
+}
+
+// Zoom to `scale`, keeping the image point under screen point (px, py) still.
+function zoomAt(scale, px, py, from = zoom) {
+  const c = centre()
+  const next = clamp(scale, 1, MAX_SCALE)
+  const ratio = next / from.scale
+  setZoom(
+    next,
+    px - c.x - (px - c.x - from.x) * ratio,
+    py - c.y - (py - c.y - from.y) * ratio
+  )
+}
+
+function toggleZoom(px, py) {
+  if (isZoomed()) setZoom(1, 0, 0)
+  else zoomAt(DOUBLE_TAP_SCALE, px, py)
+}
+
+// ---- navigation ------------------------------------------------------------
 
 function showImage(index) {
   currentIndex = (index + currentItems.length) % currentItems.length
@@ -129,17 +201,83 @@ function dismiss(dy) {
   }, 200)
 }
 
+// ---- touch -----------------------------------------------------------------
+//
+// touch.mode is one of:
+//   "swipe"  one finger at rest zoom: swipe sideways to navigate, up/down to close
+//   "pan"    one finger while zoomed: move the image around
+//   "pinch"  two fingers: zoom around their midpoint, and pan with it
+
+function midpoint(a, b) {
+  return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }
+}
+
+function startPinch(touches) {
+  // A second finger landing mid-swipe abandons the swipe.
+  image().style.transition = "none"
+  overlay.style.cssText = ""
+  overlay.classList.add("dragging")
+
+  const [a, b] = touches
+  touch = {
+    mode: "pinch",
+    dist: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+    mid: midpoint(a, b),
+    from: { ...zoom },
+  }
+}
+
+function startOneFinger(t, onImage) {
+  touch = isZoomed()
+    ? { mode: "pan", x: t.clientX, y: t.clientY, from: { ...zoom }, moved: false, onImage }
+    : { mode: "swipe", x: t.clientX, y: t.clientY, time: Date.now(), dx: 0, dy: 0, axis: null, onImage }
+}
+
 function onTouchStart(e) {
+  lastTouchAt = Date.now()
   const onChrome = e.target.closest(".lightbox-close, .lightbox-download, .lightbox-prev, .lightbox-next")
-  const t = e.touches[0]
-  touch = animating || onChrome || e.touches.length !== 1
-    ? null
-    : { x: t.clientX, y: t.clientY, time: Date.now(), dx: 0, dy: 0, axis: null }
+
+  if (animating || onChrome) touch = null
+  else if (e.touches.length === 2) startPinch(e.touches)
+  else if (e.touches.length === 1) startOneFinger(e.touches[0], !!e.target.closest(".lightbox-image"))
+  else touch = null
 }
 
 function onTouchMove(e) {
   if (!touch) return
+
+  if (touch.mode === "pinch") {
+    if (e.touches.length < 2) return
+    e.preventDefault()
+    const [a, b] = e.touches
+    const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY)
+    const mid = midpoint(a, b)
+    const scale = clamp(touch.from.scale * (dist / touch.dist), 1, MAX_SCALE)
+
+    // Hold the image point first under the fingers' midpoint under where the
+    // midpoint is now, which pans and zooms in one go.
+    const c = centre()
+    const ratio = scale / touch.from.scale
+    setZoom(
+      scale,
+      mid.x - c.x - (touch.mid.x - c.x - touch.from.x) * ratio,
+      mid.y - c.y - (touch.mid.y - c.y - touch.from.y) * ratio
+    )
+    return
+  }
+
   if (e.touches.length !== 1) return onTouchCancel()
+
+  if (touch.mode === "pan") {
+    e.preventDefault()
+    const dx = e.touches[0].clientX - touch.x
+    const dy = e.touches[0].clientY - touch.y
+    if (!touch.moved && Math.hypot(dx, dy) < AXIS_LOCK) return
+    touch.moved = true
+    overlay.classList.add("dragging")
+    setZoom(touch.from.scale, touch.from.x + dx, touch.from.y + dy)
+    return
+  }
 
   touch.dx = e.touches[0].clientX - touch.x
   touch.dy = e.touches[0].clientY - touch.y
@@ -164,17 +302,58 @@ function onTouchMove(e) {
   }
 }
 
-function onTouchEnd() {
+// A quick second tap near the first toggles zoom around the tapped point.
+function handleTap(t) {
+  const now = Date.now()
+  const isDouble = lastTap
+    && now - lastTap.time < DOUBLE_TAP_DELAY
+    && Math.hypot(t.clientX - lastTap.x, t.clientY - lastTap.y) < DOUBLE_TAP_SLOP
+
+  if (isDouble) {
+    lastTap = null
+    lastDragEnd = now // swallow the synthetic click
+    toggleZoom(t.clientX, t.clientY)
+  } else {
+    lastTap = { time: now, x: t.clientX, y: t.clientY }
+  }
+}
+
+function onTouchEnd(e) {
   if (!touch) return
 
-  const { axis, dx, dy, time } = touch
+  if (touch.mode === "pinch") {
+    lastDragEnd = Date.now()
+    lastTap = null
+    overlay.classList.remove("dragging")
+    image().style.transition = ""
+    if (!isZoomed()) setZoom(1, 0, 0)
+
+    // Lifting one finger of two carries on as a pan with the one left down.
+    touch = null
+    if (e.touches.length === 1 && isZoomed()) startOneFinger(e.touches[0], false)
+    return
+  }
+
+  if (touch.mode === "pan") {
+    const { moved, onImage } = touch
+    touch = null
+    overlay.classList.remove("dragging")
+    if (moved) lastDragEnd = Date.now()
+    else if (onImage) handleTap(e.changedTouches[0])
+    return
+  }
+
+  const { axis, dx, dy, time, onImage } = touch
   const elapsed = Math.max(Date.now() - time, 1)
   const delta = axis === "x" ? dx : dy
   touch = null
   overlay.classList.remove("dragging")
 
   // No axis lock means the finger never really moved: let it count as a tap.
-  if (!axis) return
+  if (!axis) {
+    if (onImage) handleTap(e.changedTouches[0])
+    return
+  }
   lastDragEnd = Date.now()
 
   // Commit on a long drag or on a short, fast flick; otherwise spring back.
@@ -188,9 +367,63 @@ function onTouchEnd() {
 
 function onTouchCancel() {
   if (!touch) return // nothing was dragging; don't wipe a running animation
+  const zoomGesture = touch.mode !== "swipe"
   touch = null
-  resetDrag()
+
+  if (zoomGesture) {
+    // Keep whatever zoom the gesture reached rather than snapping back.
+    overlay.classList.remove("dragging")
+    image().style.transition = ""
+  } else {
+    resetDrag()
+  }
 }
+
+// ---- mouse & trackpad ------------------------------------------------------
+
+function onWheel(e) {
+  if (animating) return
+  e.preventDefault()
+
+  // Trackpad pinches arrive as ctrl+wheel with small deltas.
+  const speed = e.ctrlKey ? 0.01 : 0.002
+  overlay.classList.add("dragging")
+  zoomAt(zoom.scale * Math.exp(-e.deltaY * speed), e.clientX, e.clientY)
+
+  clearTimeout(wheelTimer)
+  wheelTimer = setTimeout(() => overlay.classList.remove("dragging"), 150)
+}
+
+function onDoubleClick(e) {
+  // Touch double-taps are handled in handleTap; some browsers also fire a dblclick.
+  if (Date.now() - lastTouchAt < 1000) return
+  if (!e.target.closest(".lightbox-image")) return
+  toggleZoom(e.clientX, e.clientY)
+}
+
+function onMouseDown(e) {
+  if (e.button !== 0 || !isZoomed() || !e.target.closest(".lightbox-image")) return
+  e.preventDefault()
+  mousePan = { x: e.clientX, y: e.clientY, from: { ...zoom }, moved: false }
+  overlay.classList.add("dragging", "panning")
+}
+
+window.addEventListener("mousemove", (e) => {
+  if (!mousePan) return
+  const dx = e.clientX - mousePan.x
+  const dy = e.clientY - mousePan.y
+  if (Math.hypot(dx, dy) > 3) mousePan.moved = true
+  setZoom(mousePan.from.scale, mousePan.from.x + dx, mousePan.from.y + dy)
+})
+
+window.addEventListener("mouseup", () => {
+  if (!mousePan) return
+  if (mousePan.moved) lastDragEnd = Date.now()
+  mousePan = null
+  overlay.classList.remove("dragging", "panning")
+})
+
+// ---- clicks & keys ---------------------------------------------------------
 
 document.addEventListener("click", (e) => {
   // Touch swipes emit a synthetic click on release; ignore it so a dismiss
@@ -228,4 +461,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox()
   else if (e.key === "ArrowLeft") navigate(-1)
   else if (e.key === "ArrowRight") navigate(1)
+  else if (e.key === "+" || e.key === "=") zoomAt(zoom.scale * 1.5, centre().x, centre().y)
+  else if (e.key === "-") zoomAt(zoom.scale / 1.5, centre().x, centre().y)
+  else if (e.key === "0") setZoom(1, 0, 0)
 })
